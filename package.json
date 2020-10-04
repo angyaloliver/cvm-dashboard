@@ -1,0 +1,35 @@
+{
+  "name": "cvm-dashboard",
+  "version": "1.0.0",
+  "description": "Web-based image processing solution to facilitate the war on coronavirus.",
+  "main": "src/index.ts",
+  "scripts": {
+    "test": "jest --watchAll --runInBand",
+    "coverage": "jest --coverage",
+    "build": "npx ts-node-script init-env.ts",
+    "start": "npm-run-all --parallel build test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/angyaloliver/cvm-dashboard.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/angyaloliver/cvm-dashboard/issues"
+  },
+  "homepage": "https://github.com/angyaloliver/cvm-dashboard#readme",
+  "devDependencies": {
+    "@types/jest": "^26.0.14",
+    "chokidar": "^3.4.2",
+    "jest": "^26.4.2",
+    "npm-run-all": "^4.1.5",
+    "ts-jest": "^26.4.1",
+    "ts-node": "^9.0.0",
+    "typescript": "^4.0.3"
+  },
+  "dependencies": {
+    "esbuild": "^0.7.9",
+    "live-server": "^1.2.1"
+  }
+}
