@@ -24,7 +24,7 @@ export const build = async (): Promise<void> => {
     console.log(`Built in ${timerEnd - timerStart}ms.`);
     copyToDist();
   } catch (e) {
-    console.log(`ERROR: ${e}`);
+    console.log(`ERROR: ${e as string}`);
   } finally {
     service.stop();
   }
