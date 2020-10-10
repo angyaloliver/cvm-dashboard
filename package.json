@@ -4,7 +4,7 @@
   "description": "Web-based image processing solution to facilitate the war on coronavirus.",
   "main": "src/index.ts",
   "scripts": {
-    "test": "jest --watchAll --runInBand",
+    "test": "jest --watch --runInBand",
     "coverage": "jest --coverage",
     "build": "npx ts-node-script build.ts",
     "watch": "npx ts-node-script watch.ts serve",
