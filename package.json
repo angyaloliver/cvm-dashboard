@@ -6,8 +6,10 @@
   "scripts": {
     "test": "jest --watchAll --runInBand",
     "coverage": "jest --coverage",
-    "build": "npx ts-node-script init-env.ts",
-    "start": "npm-run-all --parallel build test"
+    "build": "npx ts-node-script build.ts",
+    "watch": "npx ts-node-script watch.ts serve",
+    "serve": "npx http-server ./dist",
+    "start": "npm-run-all --parallel watch serve test"
   },
   "repository": {
     "type": "git",
@@ -21,15 +23,19 @@
   "homepage": "https://github.com/angyaloliver/cvm-dashboard#readme",
   "devDependencies": {
     "@types/jest": "^26.0.14",
+    "@typescript-eslint/eslint-plugin": "^4.4.0",
+    "@typescript-eslint/parser": "^4.4.0",
     "chokidar": "^3.4.2",
+    "esbuild": "^0.7.9",
+    "eslint": "^7.10.0",
+    "eslint-plugin-jest": "^24.1.0",
+    "http-server": "^0.12.3",
     "jest": "^26.4.2",
+    "livereload": "^0.9.1",
     "npm-run-all": "^4.1.5",
     "ts-jest": "^26.4.1",
     "ts-node": "^9.0.0",
     "typescript": "^4.0.3"
   },
-  "dependencies": {
-    "esbuild": "^0.7.9",
-    "live-server": "^1.2.1"
-  }
+  "dependencies": {}
 }
