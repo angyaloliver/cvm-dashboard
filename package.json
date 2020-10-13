@@ -7,7 +7,7 @@
     "test": "jest --watch --runInBand",
     "coverage": "jest --coverage",
     "build": "npx ts-node-script build.ts",
-    "watch": "npx ts-node-script watch.ts serve",
+    "watch": "npx ts-node-script watch.ts",
     "serve": "npx http-server ./dist",
     "start": "npm-run-all --parallel watch serve test"
   },
