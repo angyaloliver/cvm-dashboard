@@ -24,7 +24,7 @@
   "mounts": [
     "source=cvm-dashboard-node_modules,target=/workspace/node_modules,type=volume"
   ],
-  "forwardPorts": [8080],
+  "forwardPorts": [8080, 35729],
   // Use 'postCreateCommand' to run commands after the container is created.
   "postCreateCommand": "sudo npm install"
   // Uncomment to connect as a non-root user. See https://aka.ms/vscode-remote/containers/non-root.

@@ -13,20 +13,23 @@ const watchFiles = () => {
 
 watchFiles();
 
-const script = `<script>
-    document.write(
-      '<script src="http://' +
-        (location.host || "localhost").split(":")[0] +
-        ':35729/livereload.js?snipver=1"></' +
-        "script>"
-    );
-  </script>`;
+const script = `<!--The following script is here for development purposes.-->
+<script>
+  document.write(
+    '<script src="http://' +
+      (location.host || "localhost").split(":")[0] +
+      ':35729/livereload.js?snipver=1"></' +
+      "script>"
+  );
+</script>`;
 const file = resolve(__dirname, "./src/index.html");
 readFile(file, "utf8", (err: any, data: string) => {
   if (err) {
     return console.log(err);
   }
-  if (!data.toString().includes(script)) {
+  data = data.replace(/\s+/g, " ");
+  const script_stripped = script.replace(/\s+/g, " ");
+  if (!data.includes(script_stripped)) {
     appendFile(file, script, (err: any) => {
       if (err) return console.log(err);
     });
