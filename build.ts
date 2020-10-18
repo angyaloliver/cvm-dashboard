@@ -1,11 +1,5 @@
 import { startService } from "esbuild";
-import { copyFile } from "fs";
-
-const copyToDist = () => {
-  copyFile(`src/index.html`, `dist/index.html`, (err) => {
-    if (err) throw err;
-  });
-};
+import { copyFileSync } from "fs";
 
 export const build = async (): Promise<void> => {
   const service = await startService();
@@ -22,12 +16,10 @@ export const build = async (): Promise<void> => {
     });
     const timerEnd = Date.now();
     console.log(`Built in ${timerEnd - timerStart}ms.`);
-    copyToDist();
+    copyFileSync(`src/index.html`, `dist/index.html`);
   } catch (e) {
     console.log(`ERROR: ${e as string}`);
   } finally {
     service.stop();
   }
 };
-
-build().catch((err) => console.log(err));
