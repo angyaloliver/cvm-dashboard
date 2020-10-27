@@ -1,7 +1,141 @@
-.green {
-  background-color: green;
+@import url("https://fonts.googleapis.com/css2?family=Roboto&display=swap");
+
+:root {
+  --background: #141414;
+  --large-padding: 64px;
+  --medium-padding: 40px;
+  --small-padding: 12px;
 }
 
-.yellow {
-  background-color: yellow;
+* {
+  margin: 0;
+  box-sizing: border-box;
+  font-family: "Roboto", sans-serif;
+  font-weight: 300;
+}
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  background: var(--background);
+  display: flex;
+  align-items: center;
+  padding: 0 var(--large-padding);
+  width: 100%;
+  justify-content: space-around;
+}
+
+body > * {
+  height: 80vh;
+  min-width: 0;
+  min-height: 0;
+}
+
+video {
+  flex: 0 1 auto;
+  object-fit: contain;
+}
+
+.statistics {
+  flex: 0 0 600px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+#chart {
+  margin-top: var(--large-padding);
+}
+
+#tendencia {
+  transition: transform 200ms;
+}
+
+.overall {
+  display: flex;
+  justify-content: space-between;
+}
+
+.overall > div {
+  border-radius: 8px;
+  width: 156px;
+  height: 156px;
+  color: white;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.overall > div > h2 {
+  margin-top: var(--medium-padding);
+  font-size: 18px;
+  line-height: 21px;
+}
+
+.overall > div > p {
+  font-size: 60px;
+  line-height: 70px;
+  margin-bottom: var(--medium-padding);
+}
+.overall > div > img {
+  margin-bottom: var(--medium-padding);
+}
+
+.overall > div:nth-child(1) {
+  background-color: #666b80;
+}
+
+.overall > div:nth-child(2) {
+  background-color: #44a8cc;
+}
+
+.overall > div:nth-child(3) {
+  background-color: #b3444f;
+}
+
+@media (max-width: 800px) {
+  :root {
+    --large-padding: 24px;
+    --medium-padding: 16px;
+    --small-padding: 8px;
+  }
+
+  body {
+    flex-direction: column;
+  }
+
+  .statistics {
+    width: 100%;
+  }
+
+  .overall > div {
+    width: 90px;
+    height: 90px;
+  }
+
+  .overall > div > h2 {
+    font-size: 12px;
+    line-height: 1;
+  }
+
+  .overall > div > p {
+    font-size: 32px;
+    line-height: 1;
+  }
+
+  #output-video {
+    height: auto;
+    width: 100vw;
+  }
+}
+
+@media (min-width: 800px) {
+  #output-video {
+    margin-right: var(--medium-padding);
+  }
 }

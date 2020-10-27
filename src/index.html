@@ -3,11 +3,29 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" type="text/css" href="styles.css?v=" />
-    <title>Document</title>
+    <link rel="stylesheet" type="text/css" href="styles.css" />
+
+    <title>CVM Dashboard</title>
   </head>
   <body>
-    <div class="green">it works!</div>
-    <div class="yellow">it works in yellow!</div>
+    <video autoplay="true" id="output-video"></video>
+    <section class="statistics">
+      <div class="overall">
+        <div>
+          <h2>Napi átlag</h2>
+          <p id="napi-atlag"></p>
+        </div>
+        <div>
+          <h2>Jelenlegi</h2>
+          <p id="jelenlegi"></p>
+        </div>
+        <div>
+          <h2>Tendencia</h2>
+          <img alt="arrow" src="static/arrow.svg" id="tendencia" />
+        </div>
+      </div>
+      <div id="chart"><dialog</div>
+    </section>
+    <script src="index.js"></script>
   </body>
 </html>
