@@ -10,4 +10,4 @@ Web-based image processing solution to facilitate the war on coronavirus.
 
 3. Press `Ctrl+Shift+P` in Visual Studio Code and open the cloned folder with the "Remote-Containers: Open Folder in Container..." command
 
-4. Execute `npm run start`
+4. Execute `npm start`
