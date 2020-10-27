@@ -1,5 +1,6 @@
 import { OverallStatistics } from "./overall-statistics";
 import { Chart } from "./chart";
+import { handleFullScreen } from "./handle-full-screen";
 
 export class UI {
   private outputVideo = document.querySelector(
@@ -11,12 +12,15 @@ export class UI {
   constructor() {
     const chartElement = document.querySelector("#chart") as HTMLElement;
     const napiAtlagElem = document.querySelector("#napi-atlag") as HTMLElement;
-    const jelenlegiElem = document.querySelector(
-      "#jelenlegi"
-    ) as HTMLVideoElement;
-    const tendenciaElem = document.querySelector(
-      "#tendencia"
-    ) as HTMLVideoElement;
+    const jelenlegiElem = document.querySelector("#jelenlegi") as HTMLElement;
+    const tendenciaElem = document.querySelector("#tendencia") as HTMLElement;
+    const minimize = document.querySelector("#minimize") as HTMLElement;
+    const maximize = document.querySelector("#maximize") as HTMLElement;
+    const videoContainer = document.querySelector(
+      ".video-container"
+    ) as HTMLElement;
+
+    handleFullScreen(minimize, maximize, videoContainer);
 
     this.overallStats = new OverallStatistics(
       napiAtlagElem,

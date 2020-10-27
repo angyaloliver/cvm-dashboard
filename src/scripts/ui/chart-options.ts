@@ -6,6 +6,7 @@ import { formatNumber } from "./format-number";
 export const chartOptions = {
   chart: {
     type: "line",
+    height: "100%",
     toolbar: {
       show: false,
     },
@@ -14,6 +15,9 @@ export const chartOptions = {
     min: 0,
     max: 1,
     labels: {
+      align: "right",
+      minWidth: 20,
+      maxWidth: 20,
       style: {
         colors: "#999999",
       },
@@ -36,8 +40,13 @@ export const chartOptions = {
   },
   xaxis: {
     type: "datetime",
+    axisBorder: {
+      height: 0,
+    },
     labels: {
       show: true,
+      minHeight: 25,
+      maxHeight: 25,
       format: "HH:mm",
       style: {
         colors: "#999999",
