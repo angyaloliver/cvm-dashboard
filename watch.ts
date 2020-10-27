@@ -25,10 +25,15 @@ const appendLiveReload = () => {
   const file = resolve(__dirname, "./dist/index.html");
   readFile(file, "utf8", (err: any, data: string) => {
     if (err) return console.log(err);
-    const regex = `href="styles.css?v=`;
-    const replaceString = `href="styles.css?v=` + Math.random().toString();
+    const regexCSS = `href="styles.css`;
+    const replaceStringCSS = `href="styles.css?v=` + Math.random().toString();
     data = data.concat(script);
-    data = data.replace(regex, replaceString);
+    data = data.replace(regexCSS, replaceStringCSS);
+
+    const regexJS = `src="index.js`;
+    const replaceStringJS = `src="index.js?v=` + Math.random().toString();
+    data = data.concat(script);
+    data = data.replace(regexJS, replaceStringJS);
     try {
       writeFileSync("./dist/index.html", data);
     } catch (err: any) {
