@@ -4,5 +4,7 @@ export const openVideoStream = (url: string): MediaStream => {
   video.loop = true;
   video.muted = true;
   void video.play();
-  return (video as any).captureStream() as MediaStream;
+  return ("captureStream" in video
+    ? (video as any).captureStream()
+    : (video as any).mozCaptureStream()) as MediaStream;
 };
