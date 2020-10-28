@@ -21,10 +21,13 @@ const giveRandomValues = (ui: UI) => {
 
 const main = async () => {
   const ui = new UI();
-  ui.giveVideoStream(await openCameraStream());
-
-  // Prerecorded video can be used as well
-  // ui.giveVideoStream(openVideoStream("static/sample1.mp4"));
+  try {
+    ui.giveVideoStream(await openCameraStream());
+  } catch {
+    // Required for video autoplay
+    alert("No camera, click ok");
+    ui.giveVideoStream(openVideoStream("static/sample1.mp4"));
+  }
 
   giveRandomValues(ui);
   setInterval(() => giveRandomValues(ui), 1000);
