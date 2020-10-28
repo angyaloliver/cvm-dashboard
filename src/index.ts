@@ -24,8 +24,6 @@ const main = async () => {
   try {
     ui.giveVideoStream(await openCameraStream());
   } catch {
-    // Required for video autoplay
-    confirm("No camera, click ok");
     ui.giveVideoStream(openVideoStream("static/sample1.mp4"));
   }
 

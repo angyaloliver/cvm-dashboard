@@ -44,6 +44,8 @@ export class UI {
   }
 
   public giveVideoStream(stream: MediaStream): void {
+    this.outputVideo.muted = true;
     this.outputVideo.srcObject = stream;
+    void this.outputVideo.play();
   }
 }
