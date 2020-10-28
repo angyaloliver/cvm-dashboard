@@ -5,7 +5,7 @@
   "main": "src/index.ts",
   "scripts": {
     "test": "jest --watch --runInBand",
-    "coverage": "jest --coverage",
+    "coverage": "jest --coverage --passWithNoTests",
     "build": "mkdir -p dist && cp -R static dist && npx ts-node-script run-build.ts",
     "watch": "npx ts-node-script watch.ts",
     "serve": "npx http-server ./dist",
