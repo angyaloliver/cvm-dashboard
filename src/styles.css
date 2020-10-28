@@ -38,12 +38,17 @@ body > * {
 .video-container {
   position: relative;
   flex: 1 1 auto;
+  border-radius: 8px;
 }
 
 video {
   width: 100%;
   height: 100%;
   object-fit: cover;
+}
+
+.video-container:fullscreen {
+  border-radius: 0;
 }
 
 .video-container:fullscreen video {
@@ -200,6 +205,7 @@ video {
     height: auto;
     width: 100vw;
     margin-bottom: var(--medium-padding);
+    border-radius: 0;
   }
 
   .statistics {
