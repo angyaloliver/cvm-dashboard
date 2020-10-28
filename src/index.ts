@@ -2,34 +2,24 @@ import { openVideoStream } from "./scripts/media-stream/open-video-stream";
 import { openCameraStream } from "./scripts/media-stream/open-camera-stream";
 import { getRandomVideoUrl } from "./scripts/media-stream/get-random-video-url";
 import { UI } from "./scripts/ui/ui";
+import { mockStatistics } from "./scripts/mock/mock-statistics";
+import { mockGradients } from "./scripts/mock/mock-gradients";
 
-let previous = 0.5;
-let i = 0;
-const giveRandomValues = (ui: UI) => {
-  ui.updateOverallStatistics({
-    napiAtlag: Math.random(),
-    jelenlegi: Math.random(),
-    tendencia: Math.random() * 2 - 1,
-  });
-
-  const current = Math.min(
-    1,
-    Math.max(0, previous + (Math.random() - 0.5) / 2)
-  );
-  ui.addTimeFrame(new Date(2020, 10, 12, 10, i++), current);
-  previous = current;
+const loadInput = async (ui: UI) => {
+  try {
+    await ui.giveVideoStream(await openCameraStream());
+  } catch {
+    await ui.giveVideoStream(await openVideoStream(getRandomVideoUrl()));
+  }
 };
 
 const main = async () => {
-  const ui = new UI();
-  try {
-    ui.giveVideoStream(await openCameraStream());
-  } catch {
-    ui.giveVideoStream(openVideoStream(getRandomVideoUrl()));
-  }
+  const ui: UI = new UI(() => loadInput(ui));
 
-  giveRandomValues(ui);
-  setInterval(() => giveRandomValues(ui), 1000);
+  mockStatistics(ui);
+  mockGradients(ui);
+
+  await loadInput(ui);
 };
 
 void main();

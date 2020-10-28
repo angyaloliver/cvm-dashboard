@@ -1,7 +1,7 @@
 export const handleFullScreen = (
   minimizeButton: HTMLElement,
   maximizeButton: HTMLElement,
-  targetElement: HTMLElement
+  target: HTMLElement
 ): void => {
   if (!document.fullscreenEnabled) {
     minimizeButton.style.visibility = "hidden";
@@ -9,26 +9,42 @@ export const handleFullScreen = (
     return;
   }
 
-  let isInFullScreen = document.fullscreenElement !== null;
+  const isInFullScreen = (): boolean => document.fullscreenElement !== null;
 
   const showButtons = () => {
-    minimizeButton.style.visibility = isInFullScreen ? "visible" : "hidden";
-    maximizeButton.style.visibility = isInFullScreen ? "hidden" : "visible";
+    minimizeButton.style.visibility = isInFullScreen() ? "visible" : "hidden";
+    maximizeButton.style.visibility = isInFullScreen() ? "hidden" : "visible";
   };
 
   showButtons();
 
-  maximizeButton.addEventListener(
-    "click",
-    () => void targetElement.requestFullscreen()
-  );
-  minimizeButton.addEventListener(
-    "click",
-    () => void document.exitFullscreen()
-  );
+  let currentWindowHeight = innerHeight;
 
-  document.addEventListener("fullscreenchange", () => {
-    isInFullScreen = !isInFullScreen;
+  const followToggle = () => {
     showButtons();
+    currentWindowHeight = innerHeight;
+  };
+
+  const triggerToggle = async () => {
+    await (isInFullScreen()
+      ? document.exitFullscreen()
+      : target.requestFullscreen());
+    followToggle();
+  };
+
+  addEventListener("keydown", (e) => {
+    if (e.key === "F11") {
+      void triggerToggle();
+      e.preventDefault();
+    }
   });
+
+  addEventListener("resize", () => {
+    if (isInFullScreen && currentWindowHeight > innerHeight) {
+      followToggle();
+    }
+  });
+
+  maximizeButton.addEventListener("click", () => void triggerToggle());
+  minimizeButton.addEventListener("click", () => void triggerToggle());
 };

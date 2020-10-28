@@ -11,4 +11,4 @@ const videoPaths = [
 
 export const getRandomVideoUrl = (): string => {
   return videoPaths[Math.floor(Math.random() * videoPaths.length)];
-}
+};
