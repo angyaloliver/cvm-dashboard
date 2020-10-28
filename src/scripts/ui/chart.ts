@@ -15,12 +15,19 @@ export class Chart {
 
   public addTimeFrame(time: Date, value: number): void {
     this.values.push([time.getTime(), value]);
-    this.values = this.values.slice(-this.maxValueCount);
-    this.chart.updateSeries([
-      {
-        name: "CVM rate",
-        data: this.values,
-      },
-    ]);
+    const shouldScroll = this.values.length >= this.maxValueCount;
+    if (shouldScroll) {
+      this.values = this.values.slice(-this.maxValueCount);
+    }
+
+    this.chart.updateSeries(
+      [
+        {
+          name: "CVM rate",
+          data: this.values,
+        },
+      ],
+      !shouldScroll
+    );
   }
 }
