@@ -1,5 +1,6 @@
-import { openVideoStream } from "./scripts/open-video-stream";
-import { openCameraStream } from "./scripts/open-camera-stream";
+import { openVideoStream } from "./scripts/media-stream/open-video-stream";
+import { openCameraStream } from "./scripts/media-stream/open-camera-stream";
+import { getRandomVideoUrl } from "./scripts/media-stream/get-random-video-url";
 import { UI } from "./scripts/ui/ui";
 
 let previous = 0.5;
@@ -24,7 +25,7 @@ const main = async () => {
   try {
     ui.giveVideoStream(await openCameraStream());
   } catch {
-    ui.giveVideoStream(openVideoStream("static/sample1.mp4"));
+    ui.giveVideoStream(openVideoStream(getRandomVideoUrl()));
   }
 
   giveRandomValues(ui);
