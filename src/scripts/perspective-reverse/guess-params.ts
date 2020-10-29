@@ -39,7 +39,5 @@ export const guessParams = (storage : BoundingBoxStorage): PerspectiveParams => 
         }
     }
     best = best as PerspectiveParams;
-    console.log(bestErr);
-    console.log(best.height, best.angle, best.fov);
     return best;
 }
