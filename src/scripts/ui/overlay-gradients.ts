@@ -1,6 +1,5 @@
 import { ReadonlyVec2, vec2 } from "gl-matrix";
 import { DefaultFrameBuffer } from "./graphics-library/frame-buffer/default-frame-buffer";
-import { numberToGlslFloat } from "./graphics-library/helper/number-to-glsl-float";
 import { ParallelCompiler } from "./graphics-library/parallel-compiler";
 import { FragmentShaderOnlyProgram } from "./graphics-library/program/fragment-shader-only-program";
 import Program from "./graphics-library/program/program";
@@ -18,8 +17,8 @@ export type CvmValue = {
 export class OverlayGradients {
   public static readonly blendFactor = 0.2;
   public static readonly alphaBlendFactor = 0.01;
-  public static readonly gradientCount = 24;
-  public static readonly gradientSize = 120;
+  public static readonly gradientCount = 16;
+  public static readonly gradientBaseSize = 150;
 
   private gl: UniversalRenderingContext;
   private compiler: ParallelCompiler;
@@ -47,6 +46,9 @@ export class OverlayGradients {
         ).fill(vec2.fromValues(-20000, -20000)),
       ],
       cvmValues: this.cvmValues.map((v) => v.value * 2 - 1),
+      cvmMaxDistance:
+        (vec2.length(this.ui.outputSize) / 1000) *
+        OverlayGradients.gradientBaseSize,
       screenSize: this.ui.outputSize,
     });
 
@@ -93,6 +95,7 @@ export class OverlayGradients {
         varying vec2 position;
         uniform vec2 cvmCenters[${OverlayGradients.gradientCount}];
         uniform float cvmValues[${OverlayGradients.gradientCount}];
+        uniform float cvmMaxDistance;
   
         vec3 colorFromCvmValue(float value) {
           return mix(
@@ -102,9 +105,6 @@ export class OverlayGradients {
           );
         }
   
-        const float cvmMaxDistance = ${numberToGlslFloat(
-          OverlayGradients.gradientSize
-        )};
         void main() {
           float cvmValue = 0.0;
           float dist = 10000.0;

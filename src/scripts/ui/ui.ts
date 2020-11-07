@@ -64,9 +64,11 @@ export class UI {
   }
 
   private setSize(stream: MediaStream) {
-    const trackSettings = stream.getVideoTracks()[0].getSettings();
-    this.size = [trackSettings.width!, trackSettings.height!];
-    this.overlay.setSize(this.outputSize);
+    const trackSettings = stream.getVideoTracks()[0]?.getSettings();
+    if (trackSettings) {
+      this.size = [trackSettings.width!, trackSettings.height!];
+      this.overlay.setSize(this.outputSize);
+    }
   }
 
   private size = vec2.create();
