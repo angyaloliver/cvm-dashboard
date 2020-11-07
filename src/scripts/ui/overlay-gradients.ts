@@ -15,10 +15,10 @@ export type CvmValue = {
 };
 
 export class OverlayGradients {
-  public static readonly blendFactor = 0.2;
-  public static readonly alphaBlendFactor = 0.01;
+  public static blendFactor = 0.2;
+  public static alphaBlendFactor = 0.01;
+  public static gradientBaseSize = 150;
   public static readonly gradientCount = 16;
-  public static readonly gradientBaseSize = 150;
 
   private gl: UniversalRenderingContext;
   private compiler: ParallelCompiler;
@@ -36,8 +36,20 @@ export class OverlayGradients {
     void this.initialize();
   }
 
+  private shouldClear=false;
+  public clear() {
+this.shouldClear= true;
+  }
+
   public draw() {
     this.frameBuffer.bindAndClear([]);
+    this.gl.blendColor(
+      this.shouldClear ? 1 : OverlayGradients.blendFactor,
+      this.shouldClear ? 1 : OverlayGradients.blendFactor,
+      this.shouldClear ? 1 : OverlayGradients.blendFactor,
+      this.shouldClear ? 1 : OverlayGradients.alphaBlendFactor
+    );
+    this.shouldClear = false;
     this.program.draw({
       cvmCenters: [
         ...this.cvmValues.map((v) => v.center),
@@ -129,12 +141,6 @@ export class OverlayGradients {
     await init;
 
     this.gl.enable(this.gl.BLEND);
-    this.gl.blendColor(
-      OverlayGradients.blendFactor,
-      OverlayGradients.blendFactor,
-      OverlayGradients.blendFactor,
-      OverlayGradients.alphaBlendFactor
-    );
     this.gl.blendFunc(this.gl.CONSTANT_COLOR, this.gl.ONE_MINUS_CONSTANT_COLOR);
 
     requestAnimationFrame(this.draw.bind(this));

@@ -37,7 +37,7 @@ body > * {
 
 .video-container {
   position: relative;
-  flex: 1 1 auto;
+  flex: 1 0 auto;
   border-radius: 8px;
 }
 
@@ -50,12 +50,59 @@ body > * {
   object-fit: cover;
 }
 
-.video-container:fullscreen {
+body:fullscreen .video-container {
   border-radius: 0;
+  position: absolute;
+  height: auto;
+  margin: 0 !important;
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
 }
 
-.video-container:fullscreen .video {
+body:fullscreen .video {
   object-fit: contain;
+}
+
+body:fullscreen .statistics {
+  min-width: 250px;
+  min-height: 250px;
+  width: 30vw;
+  height: 30vw;
+  max-width: 400px;
+  max-height: 400px;
+  margin: var(--large-padding);
+  border-radius: 12px;
+  opacity: 0.7;
+  backdrop-filter: blur(12px);
+  position: absolute;
+  top: 0;
+  left: 0;
+  background: #4447;
+  padding: var(--medium-padding);
+}
+
+body:fullscreen .chart-container {
+  margin: 0 !important;
+}
+
+body:fullscreen .overall > div {
+  width: 90px;
+  height: 90px;
+}
+
+body:fullscreen .overall > div > h2 {
+  font-size: 12px;
+}
+
+body:fullscreen .overall > div > p {
+  font-size: 32px;
+}
+
+body:fullscreen #tendencia {
+  width: 35px;
+  height: 35px;
 }
 
 .full-screen-controls {
@@ -176,7 +223,7 @@ body > * {
   margin-bottom: 26.5px;
 }
 
-@media (max-width: 800px) {
+@media (max-width: 1000px) {
   :root {
     --large-padding: 24px;
     --medium-padding: 16px;
@@ -205,16 +252,19 @@ body > * {
   }
 
   .video-container {
-    height: auto;
     width: 100vw;
     margin-bottom: var(--medium-padding);
+    height: auto;
     border-radius: 0;
   }
 
   .statistics {
     flex: 0 1 600px;
-
     margin-bottom: var(--medium-padding);
+  }
+
+  #output-video {
+    position: relative;
   }
 
   #tendencia {
@@ -223,7 +273,7 @@ body > * {
   }
 }
 
-@media (min-width: 800px) {
+@media (min-width: 1000px) {
   .video-container {
     margin-right: var(--medium-padding);
   }

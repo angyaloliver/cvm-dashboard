@@ -20,11 +20,8 @@ export class UI {
     const tendenciaElem = document.querySelector("#tendencia") as HTMLElement;
     const minimize = document.querySelector("#minimize") as HTMLElement;
     const maximize = document.querySelector("#maximize") as HTMLElement;
-    const videoContainer = document.querySelector(
-      ".video-container"
-    ) as HTMLElement;
 
-    handleFullScreen(minimize, maximize, videoContainer);
+    handleFullScreen(minimize, maximize, document.body);
 
     this.overallStats = new OverallStatistics(
       napiAtlagElem,
@@ -34,11 +31,19 @@ export class UI {
 
     this.chart = new Chart(chartElement);
     this.overlay = new OverlayGradients(canvas, this);
-    this.outputVideo.addEventListener("suspend", onInputStreamEnded);
+    this.outputVideo.addEventListener("suspend", () => {
+      this._hasActiveStream = false;
+      onInputStreamEnded();
+    });
   }
 
   public addTimeFrame(time: Date, value: number): void {
     this.chart.addTimeFrame(time, value);
+  }
+
+  private _hasActiveStream = false;
+  public get hasActiveStream(): boolean {
+    return this._hasActiveStream;
   }
 
   public updateOverallStatistics(values: {
@@ -61,6 +66,12 @@ export class UI {
     this.outputVideo.onprogress = () => this.setSize(stream);
 
     await this.outputVideo.play();
+    this._hasActiveStream = true;
+  }
+
+  public clearGradients() {
+    this.setCvmValuesForGradient([]);
+    this.overlay.clear();
   }
 
   private setSize(stream: MediaStream) {

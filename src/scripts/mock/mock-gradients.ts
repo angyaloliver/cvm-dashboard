@@ -20,28 +20,31 @@ export const mockGradients = (ui: UI) => {
   }
 
   const animate = (current: number) => {
-    ui.setCvmValuesForGradient(
-      gradients.map((g) => {
-        const rotated = vec2.rotate(
-          vec2.create(),
-          vec2.fromValues(g.radius, 0),
-          vec2.create(),
-          (g.velocity * current) / 1000
-        );
+    if (ui.hasActiveStream) {
+      ui.setCvmValuesForGradient(
+        gradients.map((g) => {
+          const rotated = vec2.rotate(
+            vec2.create(),
+            vec2.fromValues(g.radius, 0),
+            vec2.create(),
+            (g.velocity * current) / 1000
+          );
 
-        const translated = vec2.add(
-          rotated,
-          rotated,
-          vec2.multiply(vec2.create(), g.center, ui.outputSize)
-        );
+          const translated = vec2.add(
+            rotated,
+            rotated,
+            vec2.multiply(vec2.create(), g.center, ui.outputSize)
+          );
 
-        return {
-          value: g.cvm,
-          center: translated,
-        };
-      })
-    );
-
+          return {
+            value: g.cvm,
+            center: translated,
+          };
+        })
+      );
+    } else {
+      ui.clearGradients();
+    }
     requestAnimationFrame(animate);
   };
 

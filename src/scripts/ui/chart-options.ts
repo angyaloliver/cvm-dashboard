@@ -14,6 +14,7 @@ export const chartOptions = {
   yaxis: {
     min: 0,
     max: 1,
+    tickAmount: 5,
     labels: {
       align: "right",
       minWidth: 20,
