@@ -16,9 +16,10 @@ export type CvmValue = {
 };
 
 export class OverlayGradients {
-  public static readonly blendFactor = 0.025;
+  public static readonly blendFactor = 0.2;
+  public static readonly alphaBlendFactor = 0.01;
   public static readonly gradientCount = 24;
-  public static readonly grdientSize = 150;
+  public static readonly gradientSize = 120;
 
   private gl: UniversalRenderingContext;
   private compiler: ParallelCompiler;
@@ -102,22 +103,23 @@ export class OverlayGradients {
         }
   
         const float cvmMaxDistance = ${numberToGlslFloat(
-          OverlayGradients.grdientSize
+          OverlayGradients.gradientSize
         )};
         void main() {
           float cvmValue = 0.0;
-          float res = 0.0;
-          const float k = 0.013;
+          float dist = 10000.0;
   
           for (int i = 0; i < ${OverlayGradients.gradientCount}; i++) {
             float centerDist = distance(cvmCenters[i], position);
             float circleDist = centerDist - cvmMaxDistance;
             cvmValue += mix(cvmValues[i], 0.0, min(1.0, centerDist / cvmMaxDistance));
-            res += exp2(-k * circleDist);
+            dist = min(dist, circleDist);
           }
   
-          float smoothDistance = -log2(res) / k;
-          gl_FragColor = vec4(colorFromCvmValue(cvmValue), clamp(-smoothDistance / cvmMaxDistance, 0.0, 1.0));
+          gl_FragColor = vec4(
+            colorFromCvmValue(cvmValue),
+            clamp(-dist / cvmMaxDistance, 0.0, 1.0)
+          );
         }`,
       ],
       this.compiler
@@ -131,7 +133,7 @@ export class OverlayGradients {
       OverlayGradients.blendFactor,
       OverlayGradients.blendFactor,
       OverlayGradients.blendFactor,
-      OverlayGradients.blendFactor
+      OverlayGradients.alphaBlendFactor
     );
     this.gl.blendFunc(this.gl.CONSTANT_COLOR, this.gl.ONE_MINUS_CONSTANT_COLOR);
 
