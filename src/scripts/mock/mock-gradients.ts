@@ -28,11 +28,13 @@ export const mockGradients = (ui: UI) => {
           vec2.create(),
           (g.velocity * current) / 1000
         );
+
         const translated = vec2.add(
           rotated,
           rotated,
           vec2.multiply(vec2.create(), g.center, ui.outputSize)
         );
+
         return {
           value: g.cvm,
           center: translated,

@@ -8,6 +8,7 @@ import {
   getUniversalRenderingContext,
   UniversalRenderingContext,
 } from "./graphics-library/universal-rendering-context";
+import { UI } from "./ui";
 
 export type CvmValue = {
   center: vec2;
@@ -25,7 +26,7 @@ export class OverlayGradients {
   private frameBuffer: DefaultFrameBuffer;
   private cvmValues: Array<CvmValue> = [];
 
-  constructor(private readonly canvas: HTMLCanvasElement) {
+  constructor(canvas: HTMLCanvasElement, private readonly ui: UI) {
     this.gl = getUniversalRenderingContext(canvas, true);
     this.program = new FragmentShaderOnlyProgram(this.gl);
     this.compiler = new ParallelCompiler(this.gl);
@@ -45,10 +46,7 @@ export class OverlayGradients {
         ).fill(vec2.fromValues(-20000, -20000)),
       ],
       cvmValues: this.cvmValues.map((v) => v.value * 2 - 1),
-      screenSize: vec2.fromValues(
-        this.canvas.clientWidth,
-        this.canvas.clientHeight
-      ),
+      screenSize: this.ui.outputSize,
     });
 
     requestAnimationFrame(this.draw.bind(this));

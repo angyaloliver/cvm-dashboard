@@ -33,7 +33,7 @@ export class UI {
     );
 
     this.chart = new Chart(chartElement);
-    this.overlay = new OverlayGradients(canvas);
+    this.overlay = new OverlayGradients(canvas, this);
     this.outputVideo.addEventListener("suspend", onInputStreamEnded);
   }
 
