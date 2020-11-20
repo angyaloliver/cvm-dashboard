@@ -14,7 +14,11 @@ export class Person {
     this.cvm = 1;
   }
 
-  calculateCvm(): void {
+  public addNeighbor(neighbor: Person): void {
+    this.neighbors.push(neighbor);
+  }
+
+  public calculateCvm(): void {
     if (this.neighbors.length > 0) {
       const distancesAscending = this.getNeighborDistancesAscending();
       distancesAscending.forEach((d) => console.log(d));

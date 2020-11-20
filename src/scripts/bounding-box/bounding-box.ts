@@ -11,4 +11,12 @@ export class BoundingBox {
   public getHeight(): number {
     return this.height;
   }
+
+  public getX(): number {
+    return this.center.x;
+  }
+
+  public getY(): number {
+    return this.center.y;
+  }
 }

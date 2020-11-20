@@ -17,12 +17,12 @@ export const mockPeople = (ui: UI) => {
     vec3.fromValues(0.2, 0.5, 0.5)
   );
 
-  person1.neighbors.push(person2);
-  person1.neighbors.push(person3);
-  person2.neighbors.push(person1);
-  person2.neighbors.push(person3);
-  person3.neighbors.push(person1);
-  person3.neighbors.push(person2);
+  person1.addNeighbor(person2);
+  person1.addNeighbor(person3);
+  person2.addNeighbor(person1);
+  person2.addNeighbor(person3);
+  person3.addNeighbor(person1);
+  person3.addNeighbor(person2);
 
   console.log('first person');
   person1.calculateCvm();
