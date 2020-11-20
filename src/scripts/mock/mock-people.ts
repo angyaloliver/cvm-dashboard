@@ -1,37 +1,51 @@
-import { vec2, vec3 } from 'gl-matrix';
+import { vec2 } from 'gl-matrix';
 import { BoundingBox } from '../bounding-box/bounding-box';
 import { Person } from '../person/person';
+import { BoundingBoxStorage } from '../perspective-reverse/bounding-box-storage';
+import { guessParams } from '../perspective-reverse/guess-params';
+import { transformToWorldCoordinates } from '../perspective-reverse/perspective-reverse';
 import { UI } from '../ui/ui';
 
 export const mockPeople = (ui: UI) => {
-  const person1 = new Person(
-    new BoundingBox(vec2.fromValues(0.8, 0.8), 1),
-    vec3.fromValues(1.6, 0.8, 0.5)
-  );
-  const person2 = new Person(
-    new BoundingBox(vec2.fromValues(0.8, 0.2), 1),
-    vec3.fromValues(0.8, 0.2, 0.5)
-  );
-  const person3 = new Person(
-    new BoundingBox(vec2.fromValues(0.2, 0.5), 1),
-    vec3.fromValues(0.2, 0.5, 0.5)
-  );
+  const people = new Array<Person>();
+  const boundingBoxStorage = new BoundingBoxStorage();
 
-  person1.addNeighbor(person2);
-  person1.addNeighbor(person3);
-  person2.addNeighbor(person1);
-  person2.addNeighbor(person3);
-  person3.addNeighbor(person1);
-  person3.addNeighbor(person2);
+  for (let i = 0; i < 16; i++) {
+    const boundingBox = new BoundingBox(
+      vec2.fromValues(Math.random(), Math.random()),
+      1
+    );
+    boundingBoxStorage.registerBoundingBox(boundingBox);
+    people.push(new Person(boundingBox));
+  }
 
-  console.log('first person');
-  person1.calculateCvm();
-  console.log('second person');
-  person2.calculateCvm();
-  console.log('third person');
-  person3.calculateCvm();
+  const perspectiveParams = guessParams(boundingBoxStorage);
+  people.forEach((p) => {
+    p.wPos = transformToWorldCoordinates(
+      p.boundingBox.center,
+      perspectiveParams
+    );
+    p.calculateCvm(people);
+  });
 
-  const people = new Array<Person>(person1, person2, person3);
+  const updatePeople = () => {
+    people.forEach((p, i) => {
+      if (i % 2 === 1) {
+        p.moveLeft();
+      } else {
+        p.moveRight();
+      }
+
+      p.wPos = transformToWorldCoordinates(
+        p.boundingBox.center,
+        perspectiveParams
+      );
+      p.calculateCvm(people);
+      // console.log('Bounding box: ', p.boundingBox);
+      // console.log('World coordinates: ', p.wPos);
+      //console.log('CVM: ', p.cvm);
+    });
+  };
 
   const animate = (current: number) => {
     if (ui.hasActiveStream) {
@@ -58,6 +72,7 @@ export const mockPeople = (ui: UI) => {
     } else {
       ui.clearGradients();
     }
+    requestAnimationFrame(updatePeople);
     requestAnimationFrame(animate);
   };
 
