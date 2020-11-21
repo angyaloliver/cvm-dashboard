@@ -278,3 +278,9 @@ body:fullscreen #tendencia {
     margin-right: var(--medium-padding);
   }
 }
+
+.box {
+  background-color: #f0515ead;
+  position: absolute;
+  width: 10px;
+}
