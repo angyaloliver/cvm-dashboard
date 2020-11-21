@@ -18,13 +18,10 @@ export class Person {
     if (index > -1) {
       neighbors.splice(index, 1);
     }
-    console.log(neighbors.length);
     if (neighbors.length > 0) {
       const distancesAscending = this.getDistanceFromNeighborsAscending(
         neighbors
       );
-      // console.log('Distance from other people: ');
-      // distancesAscending.forEach((d) => console.log(d));
 
       if (distancesAscending[0] < 0.5) {
         this.cvm = 0;
@@ -47,9 +44,9 @@ export class Person {
   }
 
   private reduceDistances(distances: Array<number>): number {
-    return distances.reduce((accumulator, currentValue, currentIndex) => {
-      if (currentIndex === 0) return 0; //!!
-      return accumulator + 1.5 - Math.sqrt(currentValue - 0.5);
+    return distances.reduce((p, c, i) => {
+      if (i === 0) return 0; //!!
+      return p + 1.5 - Math.sqrt(c - 0.5);
     }, 0);
   }
 
@@ -58,10 +55,10 @@ export class Person {
   }
 
   public moveLeft(): void {
-    this.boundingBox.center.x -= 0.001;
+    this.boundingBox.bottom.x -= 0.001;
   }
 
   public moveRight(): void {
-    this.boundingBox.center.x += 0.001;
+    this.boundingBox.bottom.x += 0.001;
   }
 }

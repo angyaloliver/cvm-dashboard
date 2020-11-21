@@ -4,17 +4,17 @@ import { Person } from '../person/person';
 import { BoundingBoxStorage } from '../perspective-reverse/bounding-box-storage';
 import { guessParams } from '../perspective-reverse/guess-params';
 import { transformToWorldCoordinates } from '../perspective-reverse/perspective-reverse';
-import { UI } from '../ui/ui';
 
-export const mockPeople = (ui: UI) => {
-  const people = new Array<Person>();
+export const mockPeople = (people: Array<Person>) => {
   const boundingBoxStorage = new BoundingBoxStorage();
 
-  for (let i = 0; i < 16; i++) {
-    const boundingBox = new BoundingBox(
-      vec2.fromValues(Math.random(), Math.random()),
-      1
-    );
+  for (let i = 0; i < 8; i++) {
+    let boundingBox = null;
+    if (i % 2 === 0) {
+      boundingBox = new BoundingBox(vec2.fromValues(0.2, i / 8), 1);
+    } else {
+      boundingBox = new BoundingBox(vec2.fromValues(0.8, i / 8), 1);
+    }
     boundingBoxStorage.registerBoundingBox(boundingBox);
     people.push(new Person(boundingBox));
   }
@@ -22,13 +22,13 @@ export const mockPeople = (ui: UI) => {
   const perspectiveParams = guessParams(boundingBoxStorage);
   people.forEach((p) => {
     p.wPos = transformToWorldCoordinates(
-      p.boundingBox.center,
+      p.boundingBox.bottom,
       perspectiveParams
     );
     p.calculateCvm(people);
   });
 
-  const updatePeople = () => {
+  const animate = () => {
     people.forEach((p, i) => {
       if (i % 2 === 1) {
         p.moveLeft();
@@ -37,7 +37,7 @@ export const mockPeople = (ui: UI) => {
       }
 
       p.wPos = transformToWorldCoordinates(
-        p.boundingBox.center,
+        p.boundingBox.bottom,
         perspectiveParams
       );
       p.calculateCvm(people);
@@ -45,36 +45,7 @@ export const mockPeople = (ui: UI) => {
       // console.log('World coordinates: ', p.wPos);
       //console.log('CVM: ', p.cvm);
     });
-  };
-
-  const animate = (current: number) => {
-    if (ui.hasActiveStream) {
-      ui.setCvmValuesForGradient(
-        people.map((p) => {
-          const rotated = vec2.rotate(
-            vec2.create(),
-            vec2.fromValues(10, 0),
-            vec2.create(),
-            0
-          );
-
-          const translated = vec2.add(
-            rotated,
-            rotated,
-            vec2.multiply(vec2.create(), p.boundingBox.center, ui.outputSize)
-          );
-          return {
-            value: 1 - p.cvm,
-            center: translated,
-          };
-        })
-      );
-    } else {
-      ui.clearGradients();
-    }
-    requestAnimationFrame(updatePeople);
     requestAnimationFrame(animate);
   };
-
   requestAnimationFrame(animate);
 };

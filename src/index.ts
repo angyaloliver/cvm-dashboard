@@ -2,9 +2,11 @@ import { openVideoStream } from './scripts/media-stream/open-video-stream';
 import { openCameraStream } from './scripts/media-stream/open-camera-stream';
 import { getRandomVideoUrl } from './scripts/media-stream/get-random-video-url';
 import { UI } from './scripts/ui/ui';
-import { mockStatistics } from './scripts/mock/mock-statistics';
 import { mockPeople } from './scripts/mock/mock-people';
+import { updateStatistics } from './scripts/statistics/update-statistics';
 import { applyArrayPlugins } from './scripts/plugins/arrayPlugins';
+import { Person } from './scripts/person/person';
+import { drawGradients } from './scripts/ui/draw-gradients';
 
 declare global {
   interface Array<T> {
@@ -37,9 +39,11 @@ const loadInput = async (ui: UI) => {
 const main = async () => {
   applyArrayPlugins();
   const ui: UI = new UI(() => loadInput(ui));
+  const people: Array<Person> = new Array<Person>();
 
-  mockStatistics(ui);
-  mockPeople(ui);
+  mockPeople(people);
+  updateStatistics(ui, people);
+  drawGradients(ui, people);
 
   await loadInput(ui);
 };

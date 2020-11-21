@@ -1,4 +1,4 @@
-import { UI } from "../ui/ui";
+import { UI } from '../ui/ui';
 
 export const mockStatistics = (ui: UI) => {
   let previous = 0.5;

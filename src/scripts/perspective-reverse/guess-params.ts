@@ -13,12 +13,9 @@ export function calculateError(
 ): number {
   let err = 0;
   for (const box of storage.getBoxes()) {
-    const bottom = transformToWorldCoordinates(
-      vec2.fromValues(box.getX(), box.getY()),
-      params
-    );
+    const bottom = transformToWorldCoordinates(vec2.clone(box.bottom), params);
     const top = transformToWorldCoordinatesFixedZ(
-      vec2.fromValues(box.getX(), box.getY() + box.getHeight()),
+      vec2.fromValues(box.bottom.x, box.bottom.y + box.height),
       params,
       bottom.z
     );

@@ -1,5 +1,5 @@
-import { chartOptions } from "./chart-options";
-import ApexCharts from "apexcharts";
+import { chartOptions } from './chart-options';
+import ApexCharts from 'apexcharts';
 
 /**
  * @internal
@@ -13,6 +13,10 @@ export class Chart {
     void this.chart.render();
   }
 
+  public getCvmValues() {
+    return this.values.map((v) => v[1]);
+  }
+
   public addTimeFrame(time: Date, value: number): void {
     this.values.push([time.getTime(), value]);
     const shouldScroll = this.values.length >= this.maxValueCount;
@@ -23,7 +27,7 @@ export class Chart {
     this.chart.updateSeries(
       [
         {
-          name: "CVM rate",
+          name: 'CVM rate',
           data: this.values,
         },
       ],

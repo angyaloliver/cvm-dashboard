@@ -1,5 +1,5 @@
-import { formatNumber } from "./format-number";
-import { mix } from "./mix";
+import { formatNumber } from './format-number';
+import { mix } from './mix';
 
 /**
  * @internal
@@ -24,6 +24,9 @@ export class OverallStatistics {
     tendencia?: number;
   }): void {
     if (napiAtlag !== undefined) {
+      if (Number.isNaN(napiAtlag)) {
+        napiAtlag = 1;
+      }
       this.napiAtlagElem.innerText = formatNumber(napiAtlag);
       this.napiAtlagElem.parentElement!.style.background = this.getBackgroundFromValue(
         napiAtlag
@@ -49,6 +52,6 @@ export class OverallStatistics {
 
   private getBackgroundFromValue(value: number, min = 0, max = 1): string {
     const q = (value - min) / (max - min);
-    return `rgb(${mix(29, 241, q)}, ${mix(189, 81, q)}, ${mix(230, 94, q)})`;
+    return `rgb(${mix(241, 29, q)}, ${mix(81, 189, q)}, ${mix(94, 230, q)})`;
   }
 }
