@@ -7,4 +7,10 @@ import { vec2 } from "gl-matrix";
 // all three in camera view space
 export class BoundingBox {
   constructor(public bottom: vec2, public readonly height: number) {}
+
+  public get centerInUICoordinates(): vec2 {
+    const bottomUI: vec2 = [this.bottom.x / 2 + 0.5, this.bottom.y / 2 + 0.5];
+
+    return [bottomUI.x, bottomUI.y + this.height / 2];
+  }
 }
