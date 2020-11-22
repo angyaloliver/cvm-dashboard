@@ -2,9 +2,32 @@ import { openVideoStream } from "./scripts/media-stream/open-video-stream";
 import { openCameraStream } from "./scripts/media-stream/open-camera-stream";
 import { getRandomVideoUrl } from "./scripts/media-stream/get-random-video-url";
 import { UI } from "./scripts/ui/ui";
-import { mockStatistics } from "./scripts/mock/mock-statistics";
-import { mockGradients } from "./scripts/mock/mock-gradients";
+import { mockPeople } from "./scripts/mock/mock-people";
+import { updateStatistics } from "./scripts/statistics/update-statistics";
+import { applyArrayPlugins } from "./scripts/plugins/arrayPlugins";
+import { Person } from "./scripts/person/person";
+import { drawGradients } from "./scripts/ui/draw-gradients";
 import { PersonDetector } from "./scripts/person-detection/person-detector";
+
+declare global {
+  interface Array<T> {
+    x: T;
+    y: T;
+    z: T;
+  }
+
+  interface ReadonlyArray<T> {
+    x: T;
+    y: T;
+    z: T;
+  }
+
+  interface Float32Array {
+    x: number;
+    y: number;
+    z: number;
+  }
+}
 
 const loadInput = async (ui: UI) => {
   try {
@@ -15,10 +38,13 @@ const loadInput = async (ui: UI) => {
 };
 
 const main = async () => {
+  applyArrayPlugins();
   const ui: UI = new UI(() => loadInput(ui));
+  const people: Array<Person> = new Array<Person>();
 
-  mockStatistics(ui);
-  // mockGradients(ui);
+  mockPeople(people);
+  updateStatistics(ui, people);
+  drawGradients(ui, people);
 
   await loadInput(ui);
 
@@ -42,9 +68,9 @@ const main = async () => {
       const parentW = parent!.clientWidth;
       const parentH = parent!.clientHeight;
 
-      const x = (box.getX() * parentW) / 2 + parentW / 2;
-      const y = (box.getY() * parentH) / 2 + parentH / 2;
-      const height = box.getHeight() * parentH;
+      const x = (box.bottom.x * parentW) / 2 + parentW / 2;
+      const y = (box.bottom.y * parentH) / 2 + parentH / 2;
+      const height = box.height * parentH;
 
       elem.style.left = `${Math.round(x)}px`;
       elem.style.bottom = `${Math.round(y)}px`;

@@ -1,6 +1,6 @@
-import { vec2 } from "gl-matrix";
-import { OverlayGradients } from "../ui/overlay-gradients";
-import { UI } from "../ui/ui";
+import { vec2 } from 'gl-matrix';
+import { OverlayGradients } from '../ui/overlay-gradients';
+import { UI } from '../ui/ui';
 
 export const mockGradients = (ui: UI) => {
   const gradients: Array<{

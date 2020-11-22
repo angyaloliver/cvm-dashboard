@@ -71,7 +71,7 @@ export class PersonDetector {
           y = (VIDEO_HEIGHT / 2 - y) / (VIDEO_HEIGHT / 2);
           height /= VIDEO_HEIGHT;
 
-          return new BoundingBox(x, y, height);
+          return new BoundingBox([x, y], height);
         }) || []
       );
     } catch (error) {

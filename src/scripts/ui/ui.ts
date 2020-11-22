@@ -58,6 +58,10 @@ export class UI {
     this.overlay.setValues(values);
   }
 
+  public getChartCvmValues(){
+    return this.chart.getCvmValues();
+  }
+
   public async giveVideoStream(stream: MediaStream): Promise<void> {
     this.outputVideo.muted = true;
     this.outputVideo.srcObject = stream;
