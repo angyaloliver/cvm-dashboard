@@ -41,13 +41,13 @@ export const detectPeople = async (people: Array<Person>) => {
 
   const animate = async () => {
     const boxes = await getBoundingBoxes();
-
-    const newPeople = boxes.map((box) => new Person(box));
     boxes.forEach((box) => boundingBoxStorage.registerBoundingBox(box));
-
     const perspectiveParams = guessParams(boundingBoxStorage);
 
+    const newPeople = boxes.map((box) => new Person(box));
     people.splice(0, people.length, ...newPeople);
+
+    // showBoundingBoxes(boxes);
 
     people.forEach((person) => {
       person.wPos = transformToWorldCoordinates(
@@ -62,6 +62,32 @@ export const detectPeople = async (people: Array<Person>) => {
 
   await animate();
 };
+
+function showBoundingBoxes(boundingBoxes: BoundingBox[]) {
+  const parent = document.querySelector(".video-container");
+
+  document.querySelectorAll(".box").forEach((elem) => {
+    elem.remove();
+  });
+
+  boundingBoxes.forEach((box) => {
+    const elem = document.createElement("div");
+    elem.classList.add("box");
+
+    const parentW = parent!.clientWidth;
+    const parentH = parent!.clientHeight;
+
+    const x = (box.bottom.x * parentW) / 2 + parentW / 2;
+    const y = (box.bottom.y * parentH) / 2 + parentH / 2;
+    const height = box.height * parentH;
+
+    elem.style.left = `${Math.round(x)}px`;
+    elem.style.bottom = `${Math.round(y)}px`;
+    elem.style.height = `${Math.round(height)}px`;
+
+    parent?.appendChild(elem);
+  });
+}
 
 async function loadModel() {
   console.log("Loading tensorflow model...");
