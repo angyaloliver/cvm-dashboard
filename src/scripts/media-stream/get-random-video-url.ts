@@ -7,6 +7,7 @@ const videoPaths = [
   "/static/videos/person-walking-past-pair.mp4",
   "/static/videos/walking-in-groups.mp4",
   "/static/videos/walking-in-pair.mp4",
+  "/static/videos/long-scene.mp4",
 ];
 
 export const getRandomVideoUrl = (): string => {
