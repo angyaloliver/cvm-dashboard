@@ -7,30 +7,25 @@ import {
 import { vec2 } from 'gl-matrix';
 import { OrientationProvider } from '../orientation-provider/orientation-provider';
 
-let fiiirst = true;
 export function calculateError(
   storage: BoundingBoxStorage,
   params: PerspectiveParams
 ): number {
   let err = 0;
   for (const box of storage.getBoxes()) {
-    const bottom = transformToWorldCoordinates(vec2.clone(box.bottom), params);
+    const bottom = transformToWorldCoordinates(box.bottom, params);
     const top = transformToWorldCoordinatesFixedZ(
       vec2.fromValues(box.bottom.x, box.bottom.y + box.height),
       params,
       bottom.z
     );
-    const height = top.y; /* - bottom.y */
-    if (fiiirst) {
-      console.log('Height: ', height);
-      fiiirst = false;
-    }
-    err += (height - 1.7) * (height - 1.7);
+    const heightDiff = top.y - 1.7; /* - bottom.y */
+    err += heightDiff * heightDiff;
   }
   return err;
 }
 
-const guessHeightAndFov = (storage : BoundingBoxStorage, angle: number, callback : (par : PerspectiveParams) => void) => {
+const guessHeightAndFov = (angle: number, callback : (par : PerspectiveParams) => void) => {
   for (let cameraHeight = 3; cameraHeight <= 10.0; cameraHeight *= 1.05) {
     // ~80 iterations
     for (let fov = 0.6; fov < 1.2; fov += 0.1) {
@@ -52,6 +47,8 @@ export const guessParams = (storage: BoundingBoxStorage, orientationProvider? : 
 
   const iter = (par : PerspectiveParams) => {
     const err = calculateError(storage, par);
+    if (Math.abs(par.height- 3.0) < 0.05 && Math.abs(par.angle) < 0.01 &&Math.abs(par.fov- 1.0) < 0.01) {
+    }
     if (best === null || err < bestErr) {
       best = par;
       bestErr = err;
@@ -59,7 +56,7 @@ export const guessParams = (storage: BoundingBoxStorage, orientationProvider? : 
   }
 
   if (orientation !== null) {
-    guessHeightAndFov(storage, orientation, iter);
+    guessHeightAndFov(orientation, iter);
   }
   for (
     let angle = Math.PI / 8;
@@ -67,12 +64,11 @@ export const guessParams = (storage: BoundingBoxStorage, orientationProvider? : 
     angle -= Math.PI / 200
   ) {
     // ~80 iterations
-    guessHeightAndFov(storage, angle, iter);
+    guessHeightAndFov(angle, iter);
   }
   if(best === null) {
-    // will not happen,  but typescript does not now
+    // will not happen,  but typescript does not know
     return new PerspectiveParams();
   }
-  best = <PerspectiveParams>best;
   return best;
 };
