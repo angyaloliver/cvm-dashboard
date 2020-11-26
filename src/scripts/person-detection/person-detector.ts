@@ -12,6 +12,7 @@ import { Person } from "../person/person";
 import { BoundingBoxStorage } from "../perspective-reverse/bounding-box-storage";
 import { transformToWorldCoordinates } from "../perspective-reverse/perspective-reverse";
 import { guessParams } from "../perspective-reverse/guess-params";
+import { OrientationProvider } from "../orientation-provider/orientation-provider";
 
 console.log(cpu.version_cpu);
 console.log(webgl.version_webgl);
@@ -38,11 +39,12 @@ export const detectPeople = async (people: Array<Person>) => {
   console.log(tf.getBackend());
 
   const boundingBoxStorage = new BoundingBoxStorage();
+  const orientationProvider = new OrientationProvider();
 
   const animate = async () => {
     const boxes = await getBoundingBoxes();
     boxes.forEach((box) => boundingBoxStorage.registerBoundingBox(box));
-    const perspectiveParams = guessParams(boundingBoxStorage);
+    const perspectiveParams = guessParams(boundingBoxStorage, orientationProvider);
 
     const newPeople = boxes.map((box) => new Person(box));
     people.splice(0, people.length, ...newPeople);
