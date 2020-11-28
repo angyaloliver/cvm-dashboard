@@ -1,0 +1,18 @@
+{
+  "mode": "file",
+  "out": "docs",
+  "name": "CVM Dashboard",
+  "includeDeclarations": true,
+  "excludeExternals": true,
+  "excludeNotExported": true,
+  "excludePrivate": true,
+  "stripInternal": true,
+  "media": "media",
+  "includeVersion": true,
+  "hideGenerator": true,
+  "inputFiles": "src",
+  "favicon": "media/favicon.ico",
+  "ignoreCompilerErrors": true,
+  "listInvalidSymbolLinks": true,
+  "readme": "documentation-readme.md"
+}

@@ -9,7 +9,8 @@
     "build": "mkdir -p dist && cp -R static dist && npx ts-node-script run-build.ts",
     "watch": "npx ts-node-script watch.ts",
     "serve": "npx http-server ./dist",
-    "start": "mkdir -p dist && cp -R static dist && npm-run-all --parallel build watch serve"
+    "start": "mkdir -p dist && cp -R static dist && npm-run-all --parallel build watch serve",
+    "build:documentation": "rm -rf  docs/* && typedoc"
   },
   "repository": {
     "type": "git",
@@ -36,7 +37,9 @@
     "npm-run-all": "^4.1.5",
     "ts-jest": "^26.4.1",
     "ts-node": "^9.0.0",
-    "typescript": "^4.0.3"
+    "typescript": "^4.0.3",
+    "typedoc": "^0.19.2",
+    "typedoc-plugin-extras": "^1.1.6"
   },
   "dependencies": {
     "apexcharts": "^3.22.0"
