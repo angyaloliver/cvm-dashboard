@@ -1,14 +1,17 @@
-import { Person } from '../person/person';
+import { Person } from "../person/person";
 import {
   calculateCurrentGlobalCvm,
   calculateDailyAverageCvm,
   calculateTendency,
-} from './statistics-calculations';
-import { UI } from '../ui/ui';
+} from "./statistics-calculations";
+import { UI } from "../ui/ui";
 
 export const updateStatistics = (ui: UI, people: Array<Person>) => {
   const animate = () => {
-    const current = calculateCurrentGlobalCvm(people);
+    let current = calculateCurrentGlobalCvm(people);
+    if (isNaN(current)) {
+      current = 1;
+    }
     ui.updateOverallStatistics({
       napiAtlag: calculateDailyAverageCvm(ui.getChartCvmValues()),
       jelenlegi: current,

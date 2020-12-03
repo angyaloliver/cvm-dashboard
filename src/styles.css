@@ -282,5 +282,7 @@ body:fullscreen #tendencia {
 .box {
   background-color: #f0515e52;
   position: absolute;
-  width: 10px;
+  width: 20px;
+  white-space: nowrap;
+  overflow: visible;
 }
