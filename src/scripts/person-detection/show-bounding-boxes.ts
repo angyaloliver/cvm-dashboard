@@ -20,9 +20,7 @@ export function showBoundingBoxes(people: Person[]) {
     const y = (box.bottom.y * parentH) / 2 + parentH / 2;
     const height = box.height * parentH;
 
-    console.log(person.wPos.x, person.wPos.y, person.wPos.z);
-
-    elem.style.left = `${Math.round(x)}px`;
+    elem.style.left = `${Math.round(x) - 10}px`;
     elem.style.bottom = `${Math.round(y)}px`;
     elem.style.height = `${Math.round(height)}px`;
     elem.innerHTML = `${person.wPos.x.toFixed(1)}<br>${person.wPos.y.toFixed(

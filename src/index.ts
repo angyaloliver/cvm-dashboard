@@ -11,9 +11,9 @@ import { OrientationProvider } from "./scripts/orientation-provider/orientation-
 import { BoundingBoxStorage } from "./scripts/perspective-reverse/bounding-box-storage";
 import { guessParams } from "./scripts/perspective-reverse/guess-params";
 import { transformToWorldCoordinates } from "./scripts/perspective-reverse/perspective-reverse";
-import { WorkerResponse } from "./scripts/worker-message/worker-response";
-import { WorkerRequest } from "./scripts/worker-message/worker-request";
 import { showBoundingBoxes } from "./scripts/person-detection/show-bounding-boxes";
+import { PerspectiveParams } from "./scripts/perspective-reverse/perspective-params";
+import { YoloPersonDetector } from "./scripts/person-detection/yolo-person-detector";
 
 declare global {
   interface Array<T> {
@@ -47,15 +47,11 @@ const video: HTMLVideoElement = document.getElementById(
   "output-video"
 ) as HTMLVideoElement;
 
-const offscreenCanvas = document.createElement("canvas");
-const ctx = offscreenCanvas.getContext("2d");
-
 const ui: UI = new UI(() => loadInput(ui));
 const people: Array<Person> = new Array<Person>();
 const boundingBoxStorage = new BoundingBoxStorage();
 const orientationProvider = new OrientationProvider();
-
-const personDetectorWorker = new Worker("worker.js");
+let perspectiveParams: PerspectiveParams | null = null;
 
 const main = async () => {
   applyArrayPlugins();
@@ -65,67 +61,41 @@ const main = async () => {
 
   await loadInput(ui);
 
-  personDetectorWorker.postMessage(new WorkerRequest("loadModel"));
+  const personDetector = new YoloPersonDetector();
+  await personDetector.loadModel();
 
-  personDetectorWorker.onmessage = (e: MessageEvent<WorkerResponse>) => {
-    switch (e.data.type) {
-      case "modelLoaded": {
-        requestDetectionFromWorker();
-        break;
-      }
-      case "boundingBoxes": {
-        processBoundingBoxes(e.data.data as BoundingBox[]);
-        break;
-      }
-      default: {
-        console.warn("Unknown message from worker");
-        break;
-      }
-    }
-  };
-};
+  while (true) {
+    const boxes = await personDetector.getBoundingBoxes(video);
 
-const requestDetectionFromWorker = () => {
-  offscreenCanvas.width = video.videoWidth;
-  offscreenCanvas.height = video.videoHeight;
-
-  if (!video.paused && !video.ended) {
-    ctx?.drawImage(video, 0, 0, video.videoWidth, video.videoHeight);
-    const imgData = ctx?.getImageData(
-      0,
-      0,
-      video.videoWidth,
-      video.videoHeight
-    );
-    personDetectorWorker.postMessage(
-      new WorkerRequest("getBoundingBoxes", imgData)
-    );
+    processBoundingBoxes(boxes);
   }
 };
 
 const processBoundingBoxes = (boxes: BoundingBox[]) => {
   boxes.forEach((box) => boundingBoxStorage.registerBoundingBox(box));
-  const perspectiveParams = guessParams(
-    boundingBoxStorage,
-    orientationProvider
-  );
 
-  const newPeople = boxes.map((box) => new Person(box));
-  people.splice(0, people.length, ...newPeople);
+  if (boundingBoxStorage.getBoxes().length > 16) {
+    if (perspectiveParams === null) {
+      perspectiveParams = guessParams(boundingBoxStorage, orientationProvider);
+      console.log("Perspective parameters calculated");
+    }
 
-  people.forEach((person) => {
-    person.wPos = transformToWorldCoordinates(
-      person.boundingBox.bottom,
-      perspectiveParams
-    );
-  });
+    const newPeople = boxes.map((box) => new Person(box));
+    people.splice(0, people.length, ...newPeople);
 
-  people.forEach((person) => {
-    person.calculateCvm(people);
-  });
+    people.forEach((person) => {
+      person.wPos = transformToWorldCoordinates(
+        person.boundingBox.bottom,
+        perspectiveParams!
+      );
+    });
 
-  // showBoundingBoxes(people);
-  requestDetectionFromWorker();
+    people.forEach((person) => {
+      person.calculateCvm(people);
+    });
+
+    showBoundingBoxes(people);
+  }
 };
 
 void main();
