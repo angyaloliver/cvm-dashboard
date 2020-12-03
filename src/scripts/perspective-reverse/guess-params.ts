@@ -47,8 +47,6 @@ export const guessParams = (storage: BoundingBoxStorage, orientationProvider? : 
 
   const iter = (par : PerspectiveParams) => {
     const err = calculateError(storage, par);
-    if (Math.abs(par.height- 3.0) < 0.05 && Math.abs(par.angle) < 0.01 &&Math.abs(par.fov- 1.0) < 0.01) {
-    }
     if (best === null || err < bestErr) {
       best = par;
       bestErr = err;
