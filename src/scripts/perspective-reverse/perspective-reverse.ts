@@ -30,7 +30,7 @@ export const transformToWorldCoordinates = (
   const t = -(pers.height /* - ye */) / (sy * cphi + sphi);
   const ze = t * (cphi - sy * sphi);
   const xe = t * sx;
-  // const ye = pers.height + t*(sphi + sy * cphi);
+  // const ye = pers.height + t*(sphi + sy * cphi); == 0
   return vec3.fromValues(xe, /* ye */ 0, ze);
 };
 
@@ -52,6 +52,6 @@ export const transformToWorldCoordinatesFixedZ = (
   const t = ze / (cphi - sy * sphi);
   const xe = t * sx;
   const ye = pers.height + t * (sphi + sy * cphi);
-  // const ze2 = t*(cphi - sy*sphi);
+  // const ze2 = t*(cphi - sy*sphi); == ze
   return vec3.fromValues(xe, ye, ze);
 };

@@ -25,17 +25,6 @@ export function calculateError(
   return err;
 }
 
-const guessHeightAndFov = (angle: number, callback : (par : PerspectiveParams) => void) => {
-  for (let cameraHeight = 3; cameraHeight <= 10.0; cameraHeight *= 1.05) {
-    // ~80 iterations
-    for (let fov = 0.6; fov < 1.2; fov += 0.1) {
-      // 6 iterations
-      const par = new PerspectiveParams(cameraHeight, angle, fov);
-      callback(par);
-    }
-  }
-}
-
 /**
  * Guess perspective parameters based on data on bounding boxes and others
  */
@@ -45,24 +34,38 @@ export const guessParams = (storage: BoundingBoxStorage, orientationProvider? : 
   let bestErr = 0;
   const orientation = orientationProvider?.getOrientation() || null;
 
-  const iter = (par : PerspectiveParams) => {
-    const err = calculateError(storage, par);
-    if (best === null || err < bestErr) {
-      best = par;
-      bestErr = err;
-    }
-  }
-
   if (orientation !== null) {
-    guessHeightAndFov(orientation, iter);
+    for (let cameraHeight = 3; cameraHeight <= 10.0; cameraHeight *= 1.05) {
+      // 25 iterations
+      for (let fov = 0.6; fov < 1.2; fov += 0.1) {
+        // 6 iterations
+        const par = new PerspectiveParams(cameraHeight, orientation, fov);
+        const err = calculateError(storage, par);
+        if (best === null || err < bestErr) {
+          best = par;
+          bestErr = err;
+        }
+      }
+    }
   }
   for (
     let angle = Math.PI / 8;
     angle >= -Math.PI / 4;
     angle -= Math.PI / 200
   ) {
-    // ~80 iterations
-    guessHeightAndFov(angle, iter);
+    // 75 iterations
+    for (let cameraHeight = 3; cameraHeight <= 10.0; cameraHeight *= 1.05) {
+      // 25 iterations
+      for (let fov = 0.6; fov < 1.2; fov += 0.1) {
+        // 6 iterations
+        const par = new PerspectiveParams(cameraHeight, angle, fov);
+        const err = calculateError(storage, par);
+        if (best === null || err < bestErr) {
+          best = par;
+          bestErr = err;
+        }
+      }
+    }
   }
   if(best === null) {
     // will not happen,  but typescript does not know
