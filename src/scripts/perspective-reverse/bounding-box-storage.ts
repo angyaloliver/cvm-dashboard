@@ -10,7 +10,7 @@ export class BoundingBoxStorage {
             this.storage.push(a);
         } else {
             // length is 1024, overwrite as a circular buffer
-            // idea cretited to Andrew
+            // idea credited to Andrew
             this.storage[this.lastIdx] = a;
             this.lastIdx = (this.lastIdx+1)%1024;
         }
