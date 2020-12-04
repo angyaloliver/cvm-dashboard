@@ -35,12 +35,19 @@ declare global {
   }
 }
 
+const demoSwitch = document.querySelector("#switch") as HTMLInputElement;
+
 const loadInput = async (ui: UI) => {
-  try {
-    await ui.giveVideoStream(await openCameraStream());
-  } catch {
-    await ui.giveVideoStream(await openVideoStream(getRandomVideoUrl()));
+  if (!demoSwitch.checked) {
+    try {
+      await ui.giveVideoStream(await openCameraStream());
+      return;
+    } catch {
+      // user has declined permission
+    }
   }
+
+  await ui.giveVideoStream(await openVideoStream(getRandomVideoUrl()));
 };
 
 const video: HTMLVideoElement = document.getElementById(
@@ -61,6 +68,7 @@ const main = async () => {
   drawGradients(ui, people);
 
   await loadInput(ui);
+  demoSwitch.onchange = () => loadInput(ui);
 
   await personDetector.loadModel();
 

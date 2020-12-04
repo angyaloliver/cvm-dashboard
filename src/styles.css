@@ -28,12 +28,73 @@ body {
   width: 100%;
 }
 
+header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  padding: var(--medium-padding);
+}
+
+input[type="checkbox"] {
+  height: 0;
+  width: 0;
+  visibility: hidden;
+}
+
+header div {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+p {
+  color: white;
+}
+
+label {
+  cursor: pointer;
+  text-indent: -9999px;
+  width: 80px;
+  height: 40px;
+  background: grey;
+  display: block;
+  border-radius: 100px;
+  position: relative;
+  margin: var(--medium-padding) var(--small-padding);
+}
+
+label:after {
+  content: "";
+  position: absolute;
+  top: 5px;
+  left: 5px;
+  width: 30px;
+  height: 30px;
+  background: #fff;
+  border-radius: 100px;
+  transition: 0.3s;
+}
+
+input:checked + label {
+  background: #1dbde6;
+}
+
+input:checked + label:after {
+  left: calc(100% - 5px);
+  transform: translateX(-100%);
+}
+
+label:active:after {
+  width: 50px;
+}
+
 h1 {
   color: white;
   font-family: "Comfortaa", sans-serif;
   text-align: center;
   font-size: 3rem;
-  padding: var(--medium-padding);
+  padding: var(--small-padding) var(--large-padding);
 }
 
 main {
