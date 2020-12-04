@@ -1,4 +1,4 @@
-@import url("https://fonts.googleapis.com/css2?family=Roboto&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Comfortaa:wght@300&family=Roboto:wght@300&display=swap");
 
 :root {
   --background: #141414;
@@ -16,12 +16,27 @@
 }
 
 html,
-body {
+body,
+main {
   height: 100%;
 }
 
 body {
   background: var(--background);
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+h1 {
+  color: white;
+  font-family: "Comfortaa", sans-serif;
+  text-align: center;
+  font-size: 3rem;
+  padding: var(--medium-padding);
+}
+
+main {
   display: flex;
   align-items: center;
   padding: 0 var(--large-padding);
@@ -29,7 +44,7 @@ body {
   justify-content: space-around;
 }
 
-body > * {
+main > * {
   height: 80vh;
   min-width: 0;
   min-height: 0;
@@ -230,8 +245,12 @@ body:fullscreen #tendencia {
     --small-padding: 8px;
   }
 
-  body {
+  main {
     flex-direction: column;
+  }
+
+  h1 {
+    font-size: 2rem;
   }
 
   .statistics {

@@ -1,56 +1,58 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="hu">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" type="text/css" href="styles.css" />
-
-    <title>CVM Dashboard</title>
+    <title>CVM dashboard</title>
   </head>
   <body>
-    <div class="video-container">
-      <video class="video" id="output-video"></video>
-      <canvas class="video" id="overlay"></canvas>
-      <img
-        class="full-screen-controls"
-        src="static/minimize.svg"
-        alt="minimize"
-        id="minimize"
-      />
-      <img
-        class="full-screen-controls"
-        src="static/maximize.svg"
-        alt="maximize"
-        id="maximize"
-      />
-    </div>
-    <section class="statistics">
-      <div class="overall">
-        <div>
-          <h2>Napi átlag</h2>
-          <p id="napi-atlag"></p>
-        </div>
-        <div>
-          <h2>Jelenlegi</h2>
-          <p id="jelenlegi"></p>
-        </div>
-        <div>
-          <h2>Tendencia</h2>
-          <img alt="arrow" src="static/arrow.svg" id="tendencia" />
-        </div>
+    <h1>COVID-19 védelmi mutató</h1>
+    <main>
+      <div class="video-container">
+        <video class="video" id="output-video"></video>
+        <canvas class="video" id="overlay"></canvas>
+        <img
+          class="full-screen-controls"
+          src="static/minimize.svg"
+          alt="minimize"
+          id="minimize"
+        />
+        <img
+          class="full-screen-controls"
+          src="static/maximize.svg"
+          alt="maximize"
+          id="maximize"
+        />
       </div>
-      <div class="chart-container">
-        <div class="background">
-          <div class="line"></div>
-          <div class="line"></div>
-          <div class="line"></div>
-          <div class="line"></div>
-          <div class="line"></div>
-          <div class="line"></div>
+      <section class="statistics">
+        <div class="overall">
+          <div>
+            <h2>Napi átlag</h2>
+            <p id="napi-atlag"></p>
+          </div>
+          <div>
+            <h2>Jelenlegi</h2>
+            <p id="jelenlegi"></p>
+          </div>
+          <div>
+            <h2>Tendencia</h2>
+            <img alt="arrow" src="static/arrow.svg" id="tendencia" />
+          </div>
         </div>
-        <div id="chart"></div>
-      </div>
-    </section>
+        <div class="chart-container">
+          <div class="background">
+            <div class="line"></div>
+            <div class="line"></div>
+            <div class="line"></div>
+            <div class="line"></div>
+            <div class="line"></div>
+            <div class="line"></div>
+          </div>
+          <div id="chart"></div>
+        </div>
+      </section>
+    </main>
     <script src="index.js"></script>
   </body>
 </html>
