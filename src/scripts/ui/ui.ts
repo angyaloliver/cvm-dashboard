@@ -13,7 +13,7 @@ export class UI {
   private overlay: OverlayGradients;
 
   constructor(onInputStreamEnded: () => unknown = () => null) {
-    const canvas = document.querySelector("canvas") as HTMLCanvasElement;
+    const canvas = document.querySelector("#overlay") as HTMLCanvasElement;
     const chartElement = document.querySelector("#chart") as HTMLElement;
     const napiAtlagElem = document.querySelector("#napi-atlag") as HTMLElement;
     const jelenlegiElem = document.querySelector("#jelenlegi") as HTMLElement;
@@ -58,7 +58,7 @@ export class UI {
     this.overlay.setValues(values);
   }
 
-  public getChartCvmValues(){
+  public getChartCvmValues() {
     return this.chart.getCvmValues();
   }
 

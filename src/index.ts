@@ -13,6 +13,7 @@ import { guessParams } from "./scripts/perspective-reverse/guess-params";
 import { transformToWorldCoordinates } from "./scripts/perspective-reverse/perspective-reverse";
 import { showBoundingBoxes } from "./scripts/person-detection/show-bounding-boxes";
 import { PerspectiveParams } from "./scripts/perspective-reverse/perspective-params";
+import { Preprocessor } from "./scripts/image-processing/preprocessor";
 import { YoloPersonDetector } from "./scripts/person-detection/yolo-person-detector";
 
 declare global {
@@ -37,10 +38,18 @@ declare global {
 
 const demoSwitch = document.querySelector("#switch") as HTMLInputElement;
 
+const video: HTMLVideoElement = document.getElementById(
+  "output-video"
+) as HTMLVideoElement;
+
+const preprocessor = new Preprocessor("debug-video", video);
+
 const loadInput = async (ui: UI) => {
   if (!demoSwitch.checked) {
     try {
       await ui.giveVideoStream(await openCameraStream());
+      preprocessor.reset();
+
       return;
     } catch {
       // user has declined permission
@@ -48,11 +57,8 @@ const loadInput = async (ui: UI) => {
   }
 
   await ui.giveVideoStream(await openVideoStream(getRandomVideoUrl()));
+  preprocessor.reset();
 };
-
-const video: HTMLVideoElement = document.getElementById(
-  "output-video"
-) as HTMLVideoElement;
 
 const ui: UI = new UI(() => loadInput(ui));
 const people: Array<Person> = new Array<Person>();
