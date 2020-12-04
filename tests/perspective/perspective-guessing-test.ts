@@ -1,12 +1,12 @@
-import { BoundingBox } from '../../src/scripts/bounding-box/bounding-box';
-import { BoundingBoxStorage } from '../../src/scripts/perspective-reverse/bounding-box-storage';
+import { BoundingBox } from "../../src/scripts/bounding-box/bounding-box";
+import { BoundingBoxStorage } from "../../src/scripts/perspective-reverse/bounding-box-storage";
 import {
   calculateError,
   guessParams,
-} from '../../src/scripts/perspective-reverse/guess-params';
-import { PerspectiveParams } from '../../src/scripts/perspective-reverse/perspective-params';
-import { vec3, vec2 } from 'gl-matrix';
-import { applyArrayPlugins } from '../../src/scripts/plugins/arrayPlugins';
+} from "../../src/scripts/perspective-reverse/guess-params";
+import { PerspectiveParams } from "../../src/scripts/perspective-reverse/perspective-params";
+import { vec3, vec2 } from "gl-matrix";
+import { applyArrayPlugins } from "../../src/scripts/plugins/arrayPlugins";
 
 applyArrayPlugins();
 
@@ -45,8 +45,8 @@ const createBoundingBox = (
  *     E.g. height can be 3, 3.15, etc. as of now...
  *
  */
-describe('perspective-guessing', function () {
-  it('errorHandCrafted', function () {
+describe("perspective-guessing", function () {
+  it("errorHandCrafted", function () {
     const pers = new PerspectiveParams(3, 0, 1.0);
     const storage = new BoundingBoxStorage();
     storage.registerBoundingBox(
@@ -58,10 +58,12 @@ describe('perspective-guessing', function () {
     storage.registerBoundingBox(
       new BoundingBox(vec2.fromValues(0, -1 / 3), 1.7 / 9)
     );
-    const result = calculateError(storage, pers);
+    const cphi = Math.cos(pers.angle);
+    const sphi = Math.sin(pers.angle);
+    const result = calculateError(storage, pers, cphi, sphi);
     expect(result).toBeCloseTo(0);
   });
-  it('error', function () {
+  it("error", function () {
     const pers = new PerspectiveParams(3, Math.PI / 8, 0.6);
     const storage = new BoundingBoxStorage();
     storage.registerBoundingBox(
@@ -73,11 +75,13 @@ describe('perspective-guessing', function () {
     storage.registerBoundingBox(
       createBoundingBox(pers, vec3.fromValues(1, 1.7, 4))
     );
-    const result = calculateError(storage, pers);
+    const cphi = Math.cos(pers.angle);
+    const sphi = Math.sin(pers.angle);
+    const result = calculateError(storage, pers, cphi, sphi);
     expect(result).toBeCloseTo(0);
   });
-  it('guessParams', function () {
-    const expectedResult = new PerspectiveParams(3.15, Math.PI / 200, 0.7);
+  it("guessParams", function () {
+    const expectedResult = new PerspectiveParams(1.5, Math.PI / 100, 0.7);
     const storage = new BoundingBoxStorage();
     // the guessParams should work as long as the height is 1.7 (that's what "guess" estimates)
     storage.registerBoundingBox(
