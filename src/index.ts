@@ -51,6 +51,7 @@ const ui: UI = new UI(() => loadInput(ui));
 const people: Array<Person> = new Array<Person>();
 const boundingBoxStorage = new BoundingBoxStorage();
 const orientationProvider = new OrientationProvider();
+const personDetector = new YoloPersonDetector();
 let perspectiveParams: PerspectiveParams | null = null;
 
 const main = async () => {
@@ -61,41 +62,39 @@ const main = async () => {
 
   await loadInput(ui);
 
-  const personDetector = new YoloPersonDetector();
   await personDetector.loadModel();
 
-  while (true) {
-    const boxes = await personDetector.getBoundingBoxes(video);
+  requestAnimationFrame(() => void update());
+};
 
-    processBoundingBoxes(boxes);
-  }
+const update = async () => {
+  const boxes = await personDetector.getBoundingBoxes(video);
+  processBoundingBoxes(boxes);
+  requestAnimationFrame(() => void update());
 };
 
 const processBoundingBoxes = (boxes: BoundingBox[]) => {
   boxes.forEach((box) => boundingBoxStorage.registerBoundingBox(box));
 
-  if (boundingBoxStorage.getBoxes().length > 16) {
-    if (perspectiveParams === null) {
-      perspectiveParams = guessParams(boundingBoxStorage, orientationProvider);
-      console.log("Perspective parameters calculated");
-    }
+  console.time("guess params");
+  perspectiveParams = guessParams(boundingBoxStorage, orientationProvider);
+  console.timeEnd("guess params");
 
-    const newPeople = boxes.map((box) => new Person(box));
-    people.splice(0, people.length, ...newPeople);
+  const newPeople = boxes.map((box) => new Person(box));
+  people.splice(0, people.length, ...newPeople);
 
-    people.forEach((person) => {
-      person.wPos = transformToWorldCoordinates(
-        person.boundingBox.bottom,
-        perspectiveParams!
-      );
-    });
+  people.forEach((person) => {
+    person.wPos = transformToWorldCoordinates(
+      person.boundingBox.bottom,
+      perspectiveParams!
+    );
+  });
 
-    people.forEach((person) => {
-      person.calculateCvm(people);
-    });
+  people.forEach((person) => {
+    person.calculateCvm(people);
+  });
 
-    showBoundingBoxes(people);
-  }
+  showBoundingBoxes(people);
 };
 
 void main();
