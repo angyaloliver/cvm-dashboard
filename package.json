@@ -26,6 +26,7 @@
     "@types/jest": "^26.0.14",
     "@typescript-eslint/eslint-plugin": "^4.4.0",
     "@typescript-eslint/parser": "^4.4.0",
+    "autoprefixer": "^10.0.4",
     "chokidar": "^3.4.2",
     "esbuild": "^0.7.9",
     "eslint": "^7.10.0",
@@ -35,13 +36,17 @@
     "jest": "^26.4.2",
     "livereload": "^0.9.1",
     "npm-run-all": "^4.1.5",
+    "postcss": "^8.1.14",
     "ts-jest": "^26.4.1",
     "ts-node": "^9.0.0",
-    "typescript": "^4.0.3",
     "typedoc": "^0.19.2",
-    "typedoc-plugin-extras": "^1.1.6"
+    "typedoc-plugin-extras": "^1.1.6",
+    "typescript": "^4.0.3"
   },
   "dependencies": {
     "apexcharts": "^3.22.0"
-  }
+  },
+  "browserslist": [
+    "defaults"
+  ]
 }

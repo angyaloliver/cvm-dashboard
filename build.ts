@@ -1,5 +1,6 @@
 import { startService } from 'esbuild';
 import { copyFileSync } from 'fs';
+import { addPrefixesToCss } from './prefixer';
 
 export const build = async (): Promise<void> => {
   const service = await startService();
@@ -18,6 +19,7 @@ export const build = async (): Promise<void> => {
     console.log(`Built in ${timerEnd - timerStart}ms.`);
     copyFileSync(`src/index.html`, `dist/index.html`);
     copyFileSync(`media/favicon.ico`, `dist/favicon.ico`);
+    addPrefixesToCss();
   } catch (e) {
     console.log(`ERROR: ${e as string}`);
   } finally {
