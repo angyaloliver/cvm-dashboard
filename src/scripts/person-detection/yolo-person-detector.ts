@@ -17,7 +17,7 @@ export class YoloPersonDetector {
   async loadModel(): Promise<void> {
     console.log("Loading YOLO model...");
 
-    this.model = await yolo.v3tiny();
+    this.model = await yolo.v3tiny("/static/models/v3tiny/model.json");
 
     console.log("Model loaded");
   }
