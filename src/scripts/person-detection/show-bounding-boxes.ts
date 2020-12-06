@@ -1,8 +1,11 @@
 import { Person } from "../person/person";
 
-export function showBoundingBoxes(people: Person[]) {
-  const parent = document.querySelector(".video-container");
+const parent = document.querySelector(".video-container") as HTMLElement;
+const videoElement = document.getElementById(
+  "output-video"
+) as HTMLVideoElement;
 
+export function showBoundingBoxes(people: Person[]) {
   document.querySelectorAll(".box").forEach((elem) => {
     elem.remove();
   });
@@ -11,12 +14,16 @@ export function showBoundingBoxes(people: Person[]) {
     const elem = document.createElement("div");
     elem.classList.add("box");
 
-    const parentW = parent!.clientWidth;
-    const parentH = parent!.clientHeight;
+    const parentH = parent.clientHeight;
+    const parentW =
+      (videoElement.videoWidth / videoElement.videoHeight) * parentH;
 
     const box = person.boundingBox;
 
-    const x = (box.bottom.x * parentW) / 2 + parentW / 2;
+    const x =
+      (box.bottom.x * parentW) / 2 +
+      parentW / 2 -
+      0.5 * (parentW - parent.clientWidth);
     const y = (box.bottom.y * parentH) / 2 + parentH / 2;
     const height = box.height * parentH;
 

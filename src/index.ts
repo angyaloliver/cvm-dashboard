@@ -40,6 +40,8 @@ const video: HTMLVideoElement = document.getElementById(
   "output-video"
 ) as HTMLVideoElement;
 
+const fpsElement = document.getElementById("fps") as HTMLElement;
+
 const loadInput = async (ui: UI) => {
   if (!demoSwitch.checked) {
     try {
@@ -53,6 +55,8 @@ const loadInput = async (ui: UI) => {
 
   await ui.giveVideoStream(await openVideoStream(getRandomVideoUrl()));
 };
+
+const debugMode = window.location.search.includes("debug");
 
 const ui: UI = new UI(() => loadInput(ui));
 const people: Array<Person> = new Array<Person>();
@@ -71,12 +75,21 @@ const main = async () => {
 
   await personDetector.loadModel();
 
+  if (debugMode) fpsElement.style.display = "block";
+
   requestAnimationFrame(() => void update());
 };
 
 const update = async () => {
+  const t0 = performance.now();
+
   const boxes = await personDetector.getBoundingBoxes(video);
   processBoundingBoxes(boxes);
+
+  const t1 = performance.now();
+
+  if (debugMode) fpsElement.innerText = `${(1000 / (t1 - t0)).toFixed(0)} fps`;
+
   requestAnimationFrame(() => void update());
 };
 
@@ -119,7 +132,7 @@ const processBoundingBoxes = (boxes: BoundingBox[]) => {
     person.calculateCvm(people);
   });
 
-  showBoundingBoxes(people);
+  if (debugMode) showBoundingBoxes(people);
 };
 
 void main();

@@ -4,10 +4,6 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" type="text/css" href="styles.css" />
-    <script
-      src="https://docs.opencv.org/3.4.0/opencv.js"
-      type="text/javascript"
-    ></script>
     <title>CVM dashboard</title>
   </head>
   <body>
@@ -22,6 +18,7 @@
     </header>
     <main>
       <div class="video-container">
+        <div class="fps-overlay" id="fps">fps</div>
         <video class="video" id="output-video"></video>
         <canvas class="video" id="debug-video"></canvas>
         <canvas class="video" id="overlay"></canvas>
