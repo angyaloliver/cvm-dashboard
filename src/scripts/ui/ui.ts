@@ -41,6 +41,11 @@ export class UI {
     this.chart.addTimeFrame(time, value);
   }
 
+  public hideLoadingIcon(): void {
+    const parent = document.querySelector(".video-container") as HTMLElement;
+    parent.classList.add("loaded");
+  }
+
   private _hasActiveStream = false;
   public get hasActiveStream(): boolean {
     return this._hasActiveStream;

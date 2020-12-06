@@ -119,6 +119,28 @@ main > * {
   width: 100%;
   height: 100%;
   object-fit: cover;
+  backdrop-filter: blur(6px);
+  transition: backdrop-filter 500ms;
+}
+
+#loading {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translateX(-50%) translateY(-50%);
+  width: 250px;
+  height: 250px;
+  border-radius: 1000px;
+  opacity: 1;
+  transition: opacity 500ms;
+}
+
+.video-container.loaded #loading {
+  opacity: 0;
+}
+
+.video-container.loaded .video {
+  backdrop-filter: none;
 }
 
 body:fullscreen .video-container {
@@ -180,7 +202,6 @@ body:fullscreen #tendencia {
   position: absolute;
   bottom: var(--medium-padding);
   right: var(--medium-padding);
-
   background-color: white;
   opacity: 0.5;
   transition: opacity 200ms ease;
@@ -331,6 +352,10 @@ body:fullscreen #tendencia {
     margin-bottom: var(--medium-padding);
     height: auto;
     border-radius: 0;
+  }
+
+  .full-screen-controls {
+    transform: translateX(-50%);
   }
 
   .statistics {

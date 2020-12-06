@@ -46,7 +46,6 @@ const loadInput = async (ui: UI) => {
   if (!demoSwitch.checked) {
     try {
       await ui.giveVideoStream(await openCameraStream());
-
       return;
     } catch {
       // user has declined permission
@@ -84,6 +83,7 @@ const update = async () => {
   const t0 = performance.now();
 
   const boxes = await personDetector.getBoundingBoxes(video);
+  ui.hideLoadingIcon();
   processBoundingBoxes(boxes);
 
   const t1 = performance.now();
