@@ -355,10 +355,6 @@ body:fullscreen #tendencia {
     border-radius: 0;
   }
 
-  .full-screen-controls {
-    transform: translateX(-50%);
-  }
-
   .statistics {
     flex: 0 1 600px;
     margin-bottom: var(--medium-padding);
