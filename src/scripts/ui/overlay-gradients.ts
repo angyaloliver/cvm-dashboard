@@ -36,9 +36,9 @@ export class OverlayGradients {
     void this.initialize();
   }
 
-  private shouldClear=false;
+  private shouldClear = false;
   public clear() {
-this.shouldClear= true;
+    this.shouldClear = true;
   }
 
   public draw() {
@@ -130,7 +130,7 @@ this.shouldClear= true;
   
           gl_FragColor = vec4(
             colorFromCvmValue(cvmValue),
-            clamp(-dist / cvmMaxDistance, 0.0, 1.0)
+            clamp(-dist / cvmMaxDistance * 3.0, 0.0, 1.0)
           );
         }`,
       ],
