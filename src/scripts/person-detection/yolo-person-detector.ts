@@ -15,11 +15,7 @@ export class YoloPersonDetector {
   private model: any;
 
   async loadModel(): Promise<void> {
-    console.log("Loading YOLO model...");
-
     this.model = await yolo.v3tiny("/static/models/v3tiny/model.json");
-
-    console.log("Model loaded");
   }
 
   async getBoundingBoxes(video: HTMLVideoElement): Promise<BoundingBox[]> {
