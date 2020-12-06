@@ -1,6 +1,7 @@
 import { BoundingBoxStorage } from "./bounding-box-storage";
 import { PerspectiveParams } from "./perspective-params";
 import { OrientationProvider } from "../orientation-provider/orientation-provider";
+import { BoundingBox } from "../bounding-box/bounding-box";
 
 export const calculateError = (
   storage: BoundingBoxStorage,
@@ -8,7 +9,7 @@ export const calculateError = (
   cphi: number,
   sphi: number
 ): number =>
-  storage.boxes.reduce((error, box) => {
+  storage.boxes.reduce((error: number, box: BoundingBox) => {
     const sy = params.fov * box.bottom.y;
     const t = -params.height / (sy * cphi + sphi);
     const ze = t * (cphi - sy * sphi);

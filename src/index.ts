@@ -12,8 +12,6 @@ import { BoundingBoxStorage } from "./scripts/perspective-reverse/bounding-box-s
 import { guessParams } from "./scripts/perspective-reverse/guess-params";
 import { transformToWorldCoordinates } from "./scripts/perspective-reverse/perspective-reverse";
 import { showBoundingBoxes } from "./scripts/person-detection/show-bounding-boxes";
-import { PerspectiveParams } from "./scripts/perspective-reverse/perspective-params";
-import { Preprocessor } from "./scripts/image-processing/preprocessor";
 import { YoloPersonDetector } from "./scripts/person-detection/yolo-person-detector";
 
 declare global {
@@ -42,13 +40,10 @@ const video: HTMLVideoElement = document.getElementById(
   "output-video"
 ) as HTMLVideoElement;
 
-const preprocessor = new Preprocessor("debug-video", video);
-
 const loadInput = async (ui: UI) => {
   if (!demoSwitch.checked) {
     try {
       await ui.giveVideoStream(await openCameraStream());
-      preprocessor.reset();
 
       return;
     } catch {
@@ -57,7 +52,6 @@ const loadInput = async (ui: UI) => {
   }
 
   await ui.giveVideoStream(await openVideoStream(getRandomVideoUrl()));
-  preprocessor.reset();
 };
 
 const ui: UI = new UI(() => loadInput(ui));
@@ -65,7 +59,6 @@ const people: Array<Person> = new Array<Person>();
 const boundingBoxStorage = new BoundingBoxStorage();
 const orientationProvider = new OrientationProvider();
 const personDetector = new YoloPersonDetector();
-let perspectiveParams: PerspectiveParams | null = null;
 
 const main = async () => {
   applyArrayPlugins();
@@ -87,12 +80,30 @@ const update = async () => {
   requestAnimationFrame(() => void update());
 };
 
+let previousBoundingBoxes: Array<BoundingBox> | null = null;
+
 const processBoundingBoxes = (boxes: BoundingBox[]) => {
   boxes.forEach((box) => boundingBoxStorage.registerBoundingBox(box));
 
-  console.time("guess params");
-  perspectiveParams = guessParams(boundingBoxStorage, orientationProvider);
-  console.timeEnd("guess params");
+  const perspectiveParams = guessParams(
+    boundingBoxStorage,
+    orientationProvider
+  );
+
+  if (previousBoundingBoxes !== null) {
+    previousBoundingBoxes = previousBoundingBoxes.filter(
+      (b) => b.timeToLive > 0 && !b.isCloseToEdge()
+    );
+
+    for (const prevBox of previousBoundingBoxes) {
+      if (!boxes.some((b) => prevBox.isCloseTo(b))) {
+        prevBox.timeToLive -= 1;
+        boxes.push(prevBox);
+      }
+    }
+  }
+
+  previousBoundingBoxes = boxes;
 
   const newPeople = boxes.map((box) => new Person(box));
   people.splice(0, people.length, ...newPeople);
@@ -100,7 +111,7 @@ const processBoundingBoxes = (boxes: BoundingBox[]) => {
   people.forEach((person) => {
     person.wPos = transformToWorldCoordinates(
       person.boundingBox.bottom,
-      perspectiveParams!
+      perspectiveParams
     );
   });
 

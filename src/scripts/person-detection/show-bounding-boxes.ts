@@ -23,9 +23,11 @@ export function showBoundingBoxes(people: Person[]) {
     elem.style.left = `${Math.round(x) - 10}px`;
     elem.style.bottom = `${Math.round(y)}px`;
     elem.style.height = `${Math.round(height)}px`;
-    elem.innerHTML = `${person.wPos.x.toFixed(1)}<br>${person.wPos.y.toFixed(
+    elem.innerHTML = `x: ${person.wPos.x.toFixed(
       1
-    )}<br>${person.wPos.z.toFixed(1)}<br>${person.cvm.toFixed(1)}`;
+    )}<br>y: ${person.wPos.y.toFixed(1)}<br>z: ${person.wPos.z.toFixed(
+      1
+    )}<br>cvm: ${person.cvm.toFixed(1)}<br>ttl: ${box.timeToLive}`;
 
     parent?.appendChild(elem);
   });

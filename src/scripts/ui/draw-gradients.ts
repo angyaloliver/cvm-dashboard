@@ -1,7 +1,6 @@
 import { vec2 } from "gl-matrix";
 import { Person } from "../person/person";
 import { UI } from "./ui";
-import { BoundingBox } from "../bounding-box/bounding-box";
 
 export const drawGradients = (ui: UI, people: Array<Person>) => {
   const animate = () => {
@@ -10,7 +9,7 @@ export const drawGradients = (ui: UI, people: Array<Person>) => {
         people.map((p) => {
           const translated = vec2.multiply(
             vec2.create(),
-            BoundingBox.centerInUICoordinates(p.boundingBox),
+            p.boundingBox.centerInUICoordinates,
             ui.outputSize
           );
           return {
