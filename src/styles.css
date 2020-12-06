@@ -324,6 +324,7 @@ body:fullscreen #tendencia {
 
   main {
     flex-direction: column;
+    padding: 0 0 var(--large-padding) 0;
   }
 
   h1 {
