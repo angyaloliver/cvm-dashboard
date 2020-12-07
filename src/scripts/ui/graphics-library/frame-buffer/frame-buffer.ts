@@ -18,8 +18,6 @@ export abstract class FrameBuffer {
     this.gl.bindFramebuffer(this.gl.FRAMEBUFFER, this.frameBuffer);
 
     inputTextures.forEach((t) => t.bind());
-
-    this.gl.viewport(0, 0, this.size[0], this.size[1]);
   }
 
   public destroy(): void {
@@ -30,13 +28,19 @@ export abstract class FrameBuffer {
     const realToCssPixels =
       (this.enableHighDpiRendering ? devicePixelRatio : 1) * this.renderScale;
 
-    const displayWidth = Math.floor(canvasSize[0] * realToCssPixels);
-    const displayHeight = Math.floor(canvasSize[1] * realToCssPixels);
+    const displayWidth = Math.floor(canvasSize.x * realToCssPixels);
+    const displayHeight = Math.floor(canvasSize.y * realToCssPixels);
 
     const oldSize = vec2.clone(this.getSize());
     this.size = vec2.fromValues(displayWidth, displayHeight);
 
-    return this.size[0] != oldSize[0] || this.size[1] != oldSize[1];
+    const hasChanged = this.size.x != oldSize.x || this.size.y != oldSize.y;
+
+    if (hasChanged) {
+      this.gl.viewport(0, 0, this.size.x, this.size.y);
+    }
+
+    return hasChanged;
   }
 
   public getSize(): vec2 {

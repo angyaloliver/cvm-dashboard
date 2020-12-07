@@ -15,10 +15,10 @@ export type CvmValue = {
 };
 
 export class OverlayGradients {
-  public static blendFactor = 0.025;
-  public static alphaBlendFactor = 0.009;
-  public static gradientBaseSize = 110;
-  public static readonly gradientCount = 24;
+  public static blendFactor = 0.52;
+  public static alphaBlendFactor = 0.1;
+  public static gradientBaseSize = 120;
+  public static readonly gradientCount = 20;
 
   private gl: UniversalRenderingContext;
   private compiler: ParallelCompiler;
@@ -43,6 +43,8 @@ export class OverlayGradients {
 
   public draw() {
     this.frameBuffer.bindAndClear([]);
+    this.gl.enable(this.gl.BLEND);
+    this.gl.blendFunc(this.gl.CONSTANT_COLOR, this.gl.ONE_MINUS_CONSTANT_COLOR);
     this.gl.blendColor(
       this.shouldClear ? 1 : OverlayGradients.blendFactor,
       this.shouldClear ? 1 : OverlayGradients.blendFactor,
@@ -127,10 +129,12 @@ export class OverlayGradients {
             cvmValue += mix(cvmValues[i], 0.0, min(1.0, centerDist / cvmMaxDistance));
             dist = min(dist, circleDist);
           }
+
+          float q = (1.0 - dist / cvmMaxDistance) / 2.0;
   
           gl_FragColor = vec4(
             colorFromCvmValue(cvmValue),
-            clamp(-dist / cvmMaxDistance * 6.0, 0.0, 1.0)
+            clamp(q * q * q, 0.0, 1.0)
           );
         }`,
       ],
@@ -139,9 +143,7 @@ export class OverlayGradients {
 
     await this.compiler.compilePrograms();
     await init;
-
-    this.gl.enable(this.gl.BLEND);
-    this.gl.blendFunc(this.gl.CONSTANT_COLOR, this.gl.ONE_MINUS_CONSTANT_COLOR);
+    this.gl.clearColor(255, 255, 255, 0);
 
     requestAnimationFrame(this.draw.bind(this));
   }

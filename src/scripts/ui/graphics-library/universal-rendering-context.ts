@@ -10,11 +10,8 @@ export const getUniversalRenderingContext = (
 ): UniversalRenderingContext => {
   const contextAttributes: WebGLContextAttributes = {
     alpha: true,
-    antialias: false,
-    depth: false,
     preserveDrawingBuffer: true,
     premultipliedAlpha: false,
-    powerPreference: "high-performance",
   };
 
   const context:

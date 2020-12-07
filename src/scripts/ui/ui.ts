@@ -31,9 +31,9 @@ export class UI {
 
     this.chart = new Chart(chartElement);
     this.overlay = new OverlayGradients(canvas, this);
-    this.outputVideo.addEventListener("suspend", () => {
+    this.outputVideo.addEventListener("ended", () => {
       this._hasActiveStream = false;
-      //onInputStreamEnded();
+      onInputStreamEnded();
     });
   }
 
