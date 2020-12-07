@@ -14,6 +14,7 @@ import { showBoundingBoxes } from "./scripts/person-detection/show-bounding-boxe
 import { YoloPersonDetector } from "./scripts/person-detection/yolo-person-detector";
 import { PerspectiveParams } from "./scripts/perspective-reverse/perspective-params";
 import { vec2 } from "gl-matrix";
+import { exponentialDecay } from "./scripts/helper/exponential-decay";
 
 declare global {
   interface Array<T> {
@@ -69,23 +70,28 @@ const main = async () => {
   await loadInput(ui);
   demoSwitch.onchange = () => loadInput(ui);
   await personDetector.loadModel();
+  ui.hideLoadingIcon();
 
   requestAnimationFrame((v) => void updateBoundingBoxes(v));
   requestAnimationFrame(updateUI);
 };
 
 let previousTime = performance.now();
+let aiFrameTime = 0;
 const updateBoundingBoxes = async (currentTime: number) => {
   const deltaTime = (currentTime - previousTime) / 1000;
-  if (deltaTime < 0.125) {
+  if (deltaTime < aiFrameTime * 1.4) {
     requestAnimationFrame((v) => void updateBoundingBoxes(v));
     return;
   }
   previousTime = currentTime;
 
+  const start = performance.now();
   const boxes = await personDetector.getBoundingBoxes(video);
-  ui.hideLoadingIcon();
   processBoundingBoxes(boxes);
+  const end = performance.now();
+
+  aiFrameTime = exponentialDecay(aiFrameTime, (end - start) / 1000, 8);
 
   requestAnimationFrame((v) => void updateBoundingBoxes(v));
 };
