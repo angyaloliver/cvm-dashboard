@@ -1,7 +1,7 @@
-import { Person } from '../person/person';
+import { Person } from "../person/person";
 
 export const calculateCurrentGlobalCvm = (people: Array<Person>) => {
-  return people.reduce((p, c) => p + c.cvm, 0) / people.length;
+  return people.reduce((p, c) => p + c.cvm!, 0) / people.length;
 };
 
 export const calculateDailyAverageCvm = (cvmValues: Array<number>) => {
