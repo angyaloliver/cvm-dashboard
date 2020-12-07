@@ -1,6 +1,6 @@
 import { openVideoStream } from "./scripts/media-stream/open-video-stream";
 import { openCameraStream } from "./scripts/media-stream/open-camera-stream";
-import { getRandomVideoUrl } from "./scripts/media-stream/get-random-video-url";
+import { getDemoVideoUrl } from "./scripts/media-stream/get-random-video-url";
 import { UI } from "./scripts/ui/ui";
 import { updateStatistics } from "./scripts/statistics/update-statistics";
 import { applyArrayPlugins } from "./scripts/plugins/arrayPlugins";
@@ -52,7 +52,7 @@ const loadInput = async (ui: UI) => {
     }
   }
 
-  await ui.giveVideoStream(await openVideoStream(getRandomVideoUrl()));
+  await ui.giveVideoStream(await openVideoStream(getDemoVideoUrl()));
 };
 
 const debugMode = window.location.search.includes("debug");

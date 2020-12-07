@@ -33,7 +33,7 @@ export class UI {
     this.overlay = new OverlayGradients(canvas, this);
     this.outputVideo.addEventListener("suspend", () => {
       this._hasActiveStream = false;
-      onInputStreamEnded();
+      //onInputStreamEnded();
     });
   }
 
