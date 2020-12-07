@@ -1,4 +1,6 @@
 import { vec2 } from "gl-matrix";
+import { Vec2Extrapolator } from "../helper/vec2-extrapolator";
+import { exponentialDecay } from "../helper/exponential-decay";
 
 // x=0,y=0 is the middle of screen
 // -1=<y<=1; y=1 is the top of screen;
@@ -6,11 +8,13 @@ import { vec2 } from "gl-matrix";
 // y represents the bottom of the bounding box
 // all three in camera view space
 export class BoundingBox {
-  constructor(
-    public readonly bottom: vec2,
-    public readonly height: number,
-    public timeToLive: number = 10
-  ) {}
+  public timeSinceLastMerge = 0;
+  private velocity = vec2.create();
+  private extrapolator: Vec2Extrapolator;
+
+  constructor(public bottom: vec2, public height: number) {
+    this.extrapolator = new Vec2Extrapolator(bottom);
+  }
 
   public get centerInUICoordinates(): vec2 {
     const bottomUI: vec2 = [this.bottom.x / 2 + 0.5, this.bottom.y / 2 + 0.5];
@@ -18,19 +22,32 @@ export class BoundingBox {
     return [bottomUI.x, bottomUI.y + this.height / 2];
   }
 
-  isCloseToEdge(): boolean {
-    const threshold = 0.1;
-
-    return (
-      Math.abs(this.bottom.x) + threshold > 1 ||
-      Math.abs(this.bottom.y) + threshold > 1
-    );
+  public distance(other: BoundingBox): number {
+    return vec2.dist(this.bottom, other.bottom);
   }
 
-  isCloseTo(otherBox: BoundingBox) {
-    const threshold = 0.3;
-    const distance = vec2.dist(this.bottom, otherBox.bottom);
+  public merge(other: BoundingBox) {
+    if (this.timeSinceLastMerge > 0) {
+      const delta = vec2.subtract(vec2.create(), other.bottom, this.bottom);
+      const currentVelocity = vec2.scale(
+        delta,
+        delta,
+        1 / this.timeSinceLastMerge
+      );
 
-    return distance < threshold;
+      vec2.scale(this.velocity, this.velocity, 15 / 16);
+      vec2.scale(currentVelocity, currentVelocity, 1 / 16);
+      vec2.add(this.velocity, this.velocity, currentVelocity);
+    }
+
+    this.extrapolator.addFrame(other.bottom, this.velocity);
+
+    this.timeSinceLastMerge = 0;
+    this.height = exponentialDecay(this.height, other.height, 4);
+  }
+
+  public update(deltaTime: number) {
+    this.timeSinceLastMerge += deltaTime;
+    this.bottom = this.extrapolator.getValue(deltaTime);
   }
 }
