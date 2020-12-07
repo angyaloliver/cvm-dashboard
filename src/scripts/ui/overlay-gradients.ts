@@ -15,10 +15,10 @@ export type CvmValue = {
 };
 
 export class OverlayGradients {
-  public static blendFactor = 0.2;
-  public static alphaBlendFactor = 0.01;
-  public static gradientBaseSize = 150;
-  public static readonly gradientCount = 16;
+  public static blendFactor = 0.035;
+  public static alphaBlendFactor = 0.0075;
+  public static gradientBaseSize = 110;
+  public static readonly gradientCount = 24;
 
   private gl: UniversalRenderingContext;
   private compiler: ParallelCompiler;
@@ -130,7 +130,7 @@ export class OverlayGradients {
   
           gl_FragColor = vec4(
             colorFromCvmValue(cvmValue),
-            clamp(-dist / cvmMaxDistance * 3.0, 0.0, 1.0)
+            clamp(-dist / cvmMaxDistance * 6.0, 0.0, 1.0)
           );
         }`,
       ],
