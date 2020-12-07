@@ -26,7 +26,7 @@ export class OverlayGradients {
   private frameBuffer: DefaultFrameBuffer;
   private cvmValues: Array<CvmValue> = [];
 
-  constructor(canvas: HTMLCanvasElement, private readonly ui: UI) {
+  constructor(private canvas: HTMLCanvasElement, private readonly ui: UI) {
     this.gl = getUniversalRenderingContext(canvas, true);
     this.program = new FragmentShaderOnlyProgram(this.gl);
     this.compiler = new ParallelCompiler(this.gl);
@@ -42,6 +42,9 @@ export class OverlayGradients {
   }
 
   public draw() {
+    const { width, height } = this.canvas.getBoundingClientRect();
+    this.frameBuffer.setSize([width, height]);
+
     this.frameBuffer.bindAndClear([]);
     this.gl.enable(this.gl.BLEND);
     this.gl.blendFunc(this.gl.CONSTANT_COLOR, this.gl.ONE_MINUS_CONSTANT_COLOR);
@@ -67,10 +70,6 @@ export class OverlayGradients {
     });
 
     requestAnimationFrame(this.draw.bind(this));
-  }
-
-  public setSize(size: ReadonlyVec2) {
-    this.frameBuffer.setSize(size);
   }
 
   public setValues(values: Array<CvmValue>) {

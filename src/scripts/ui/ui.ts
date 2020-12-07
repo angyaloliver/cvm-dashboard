@@ -87,7 +87,6 @@ export class UI {
     const trackSettings = stream.getVideoTracks()[0]?.getSettings();
     if (trackSettings) {
       this.size = [trackSettings.width!, trackSettings.height!];
-      this.overlay.setSize(this.outputSize);
     }
   }
 
