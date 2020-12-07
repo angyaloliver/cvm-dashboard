@@ -35,8 +35,8 @@ export class BoundingBox {
         1 / this.timeSinceLastMerge
       );
 
-      vec2.scale(this.velocity, this.velocity, 15 / 16);
-      vec2.scale(currentVelocity, currentVelocity, 1 / 16);
+      vec2.scale(this.velocity, this.velocity, 7 / 8);
+      vec2.scale(currentVelocity, currentVelocity, 1 / 8);
       vec2.add(this.velocity, this.velocity, currentVelocity);
     }
 

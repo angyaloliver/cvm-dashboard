@@ -16,6 +16,7 @@ export abstract class FrameBuffer {
 
   public bindAndClear(inputTextures: Array<Texture>) {
     this.gl.bindFramebuffer(this.gl.FRAMEBUFFER, this.frameBuffer);
+    this.gl.viewport(0, 0, this.size.x, this.size.y);
 
     inputTextures.forEach((t) => t.bind());
   }
@@ -35,10 +36,6 @@ export abstract class FrameBuffer {
     this.size = vec2.fromValues(displayWidth, displayHeight);
 
     const hasChanged = this.size.x != oldSize.x || this.size.y != oldSize.y;
-
-    if (hasChanged) {
-      this.gl.viewport(0, 0, this.size.x, this.size.y);
-    }
 
     return hasChanged;
   }

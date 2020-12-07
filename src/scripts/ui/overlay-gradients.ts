@@ -1,4 +1,4 @@
-import { ReadonlyVec2, vec2 } from "gl-matrix";
+import { vec2 } from "gl-matrix";
 import { DefaultFrameBuffer } from "./graphics-library/frame-buffer/default-frame-buffer";
 import { ParallelCompiler } from "./graphics-library/parallel-compiler";
 import { FragmentShaderOnlyProgram } from "./graphics-library/program/fragment-shader-only-program";
@@ -15,7 +15,7 @@ export type CvmValue = {
 };
 
 export class OverlayGradients {
-  public static blendFactor = 0.52;
+  public static blendFactor = 0.1;
   public static alphaBlendFactor = 0.1;
   public static gradientBaseSize = 120;
   public static readonly gradientCount = 20;
@@ -42,8 +42,7 @@ export class OverlayGradients {
   }
 
   public draw() {
-    const { width, height } = this.canvas.getBoundingClientRect();
-    this.frameBuffer.setSize([width, height]);
+    this.frameBuffer.setSize(this.ui.outputSize);
 
     this.frameBuffer.bindAndClear([]);
     this.gl.enable(this.gl.BLEND);

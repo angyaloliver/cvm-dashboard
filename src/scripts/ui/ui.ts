@@ -11,9 +11,9 @@ export class UI {
   private overallStats: OverallStatistics;
   private chart: Chart;
   private overlay: OverlayGradients;
+  private canvas = document.querySelector("#overlay") as HTMLCanvasElement;
 
   constructor(onInputStreamEnded: () => unknown = () => null) {
-    const canvas = document.querySelector("#overlay") as HTMLCanvasElement;
     const chartElement = document.querySelector("#chart") as HTMLElement;
     const napiAtlagElem = document.querySelector("#napi-atlag") as HTMLElement;
     const jelenlegiElem = document.querySelector("#jelenlegi") as HTMLElement;
@@ -30,7 +30,7 @@ export class UI {
     );
 
     this.chart = new Chart(chartElement);
-    this.overlay = new OverlayGradients(canvas, this);
+    this.overlay = new OverlayGradients(this.canvas, this);
     this.outputVideo.addEventListener("ended", () => {
       this._hasActiveStream = false;
       onInputStreamEnded();
@@ -71,10 +71,9 @@ export class UI {
     this.outputVideo.muted = true;
     this.outputVideo.srcObject = stream;
 
-    this.setSize(stream);
-    this.outputVideo.onprogress = () => this.setSize(stream);
-
     await this.outputVideo.play();
+    this.setSize();
+
     this._hasActiveStream = true;
   }
 
@@ -83,11 +82,9 @@ export class UI {
     this.overlay.clear();
   }
 
-  private setSize(stream: MediaStream) {
-    const trackSettings = stream.getVideoTracks()[0]?.getSettings();
-    if (trackSettings) {
-      this.size = [trackSettings.width!, trackSettings.height!];
-    }
+  private setSize() {
+    const video = document.querySelector("video") as HTMLVideoElement;
+    this.size = [video.videoWidth, video.videoHeight];
   }
 
   private size = vec2.create();
