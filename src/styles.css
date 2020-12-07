@@ -377,19 +377,25 @@ body:fullscreen #tendencia {
 }
 
 .box {
-  border: solid yellow 1px;
   position: absolute;
-  width: 20px;
   white-space: nowrap;
   overflow: visible;
+  font-size: 0.8rem;
+  font-family: monospace;
+  color: white;
+  text-shadow: 0 0 1px black;
+  writing-mode: tb-rl;
 }
 
-.fps-overlay {
-  display: none;
+.box:after {
+  content: "";
   position: absolute;
-  z-index: 1;
-  padding: 2px;
-  background-color: yellow;
-  right: 0;
+  left: 0;
   top: 0;
+  border: solid white 1px;
+  height: 100%;
+  width: 10px;
+  background-color: black;
+  transform: translateX(-10px);
+  border-radius: 1000px;
 }

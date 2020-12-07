@@ -27,14 +27,14 @@ export function showBoundingBoxes(people: Person[]) {
     const y = (box.bottom.y * parentH) / 2 + parentH / 2;
     const height = box.height * parentH;
 
-    elem.style.left = `${Math.round(x) - 10}px`;
-    elem.style.bottom = `${Math.round(y)}px`;
-    elem.style.height = `${Math.round(height)}px`;
-    elem.innerHTML = `x: ${person.wPos.x.toFixed(
+    elem.style.left = `${x}px`;
+    elem.style.bottom = `${y}px`;
+    elem.style.height = `${height}px`;
+    elem.innerText = `(${person.worldPosition.x.toFixed(
       1
-    )}<br>y: ${person.wPos.y.toFixed(1)}<br>z: ${person.wPos.z.toFixed(
+    )}, ${person.worldPosition.y.toFixed(1)}, ${person.worldPosition.z.toFixed(
       1
-    )}<br>cvm: ${person.cvm.toFixed(1)}<br>ttl: ${box.timeToLive}`;
+    )}), cvm: ${person.cvm!.toFixed(1)}`;
 
     parent?.appendChild(elem);
   });
