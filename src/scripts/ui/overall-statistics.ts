@@ -1,5 +1,5 @@
-import { formatNumber } from './format-number';
-import { mix } from './mix';
+import { formatNumber } from "./format-number";
+import { mix } from "./mix";
 
 /**
  * @internal
@@ -34,6 +34,9 @@ export class OverallStatistics {
     }
 
     if (jelenlegi !== undefined) {
+      if (Number.isNaN(jelenlegi)) {
+        jelenlegi = 1;
+      }
       this.jelenlegiElem.innerText = formatNumber(jelenlegi);
       this.jelenlegiElem.parentElement!.style.background = this.getBackgroundFromValue(
         jelenlegi
@@ -41,6 +44,9 @@ export class OverallStatistics {
     }
 
     if (tendencia !== undefined) {
+      if (Number.isNaN(tendencia)) {
+        tendencia = 0;
+      }
       this.tendenciaElem.style.transform = `rotate(${-45 * tendencia}deg)`;
       this.tendenciaElem.parentElement!.style.background = this.getBackgroundFromValue(
         tendencia,

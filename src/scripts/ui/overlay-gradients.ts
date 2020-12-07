@@ -15,8 +15,8 @@ export type CvmValue = {
 };
 
 export class OverlayGradients {
-  public static blendFactor = 0.035;
-  public static alphaBlendFactor = 0.0075;
+  public static blendFactor = 0.025;
+  public static alphaBlendFactor = 0.009;
   public static gradientBaseSize = 110;
   public static readonly gradientCount = 24;
 

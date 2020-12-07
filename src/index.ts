@@ -192,6 +192,7 @@ const updateUI = (currentTime: number) => {
 
   if ((timeSinceStatsUpdate += deltaTime) > 1) {
     updateStatistics(ui, people);
+    timeSinceStatsUpdate = 0;
   }
 
   requestAnimationFrame(updateUI);

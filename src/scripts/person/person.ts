@@ -30,7 +30,7 @@ export class Person {
     }
 
     if (this.cvm !== null) {
-      this.cvm = exponentialDecay(this.cvm, newCvm, 32);
+      this.cvm = exponentialDecay(this.cvm, newCvm, 50);
     } else {
       this.cvm = newCvm;
     }
