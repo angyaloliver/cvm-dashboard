@@ -11,10 +11,10 @@ import { BoundingBoxStorage } from "./scripts/perspective-reverse/bounding-box-s
 import { guessParams } from "./scripts/perspective-reverse/guess-params";
 import { transformToWorldCoordinates } from "./scripts/perspective-reverse/perspective-reverse";
 import { showBoundingBoxes } from "./scripts/person-detection/show-bounding-boxes";
-import { YoloPersonDetector } from "./scripts/person-detection/yolo-person-detector";
 import { PerspectiveParams } from "./scripts/perspective-reverse/perspective-params";
 import { vec2 } from "gl-matrix";
-import { exponentialDecay } from "./scripts/helper/exponential-decay";
+import { WorkerRequest } from "./scripts/worker-message/worker-request";
+import { WorkerResponse } from "./scripts/worker-message/worker-response";
 
 declare global {
   interface Array<T> {
@@ -43,6 +43,9 @@ const video: HTMLVideoElement = document.getElementById(
   "output-video"
 ) as HTMLVideoElement;
 
+const offscreenCanvas = new OffscreenCanvas(0, 0);
+const ctx = offscreenCanvas.getContext("2d");
+
 const loadInput = async (ui: UI) => {
   if (!demoSwitch.checked) {
     try {
@@ -62,38 +65,52 @@ const ui: UI = new UI(() => loadInput(ui));
 let people: Array<Person> = new Array<Person>();
 const boundingBoxStorage = new BoundingBoxStorage();
 const orientationProvider = new OrientationProvider();
-const personDetector = new YoloPersonDetector();
+
+const personDetectorWorker = new Worker("worker.js");
 
 const main = async () => {
   updateStatistics(ui, people);
 
   await loadInput(ui);
   demoSwitch.onchange = () => loadInput(ui);
-  await personDetector.loadModel();
-  ui.hideLoadingIcon();
 
-  requestAnimationFrame((v) => void updateBoundingBoxes(v));
+  personDetectorWorker.postMessage(new WorkerRequest("loadModel"));
+
+  personDetectorWorker.onmessage = (e: MessageEvent<WorkerResponse>) => {
+    switch (e.data.type) {
+      case "modelLoaded": {
+        ui.hideLoadingIcon();
+
+        requestDetectionFromWorker();
+        break;
+      }
+      case "boundingBoxes": {
+        processBoundingBoxes(e.data.data as BoundingBox[]);
+        break;
+      }
+      default: {
+        console.warn("Unknown message from worker");
+        break;
+      }
+    }
+  };
+
   requestAnimationFrame(updateUI);
 };
 
-let previousTime = performance.now();
-let aiFrameTime = 0;
-const updateBoundingBoxes = async (currentTime: number) => {
-  const deltaTime = (currentTime - previousTime) / 1000;
-  if (deltaTime < aiFrameTime * 1.4) {
-    requestAnimationFrame((v) => void updateBoundingBoxes(v));
-    return;
+const requestDetectionFromWorker = () => {
+  const INPUT_SIZE = 416;
+
+  offscreenCanvas.width = INPUT_SIZE;
+  offscreenCanvas.height = INPUT_SIZE;
+
+  if (!video.paused && !video.ended) {
+    ctx?.drawImage(video, 0, 0, INPUT_SIZE, INPUT_SIZE);
+    const imgData = ctx?.getImageData(0, 0, INPUT_SIZE, INPUT_SIZE);
+    personDetectorWorker.postMessage(
+      new WorkerRequest("getBoundingBoxes", imgData)
+    );
   }
-  previousTime = currentTime;
-
-  const start = performance.now();
-  const boxes = await personDetector.getBoundingBoxes(video);
-  processBoundingBoxes(boxes);
-  const end = performance.now();
-
-  aiFrameTime = exponentialDecay(aiFrameTime, (end - start) / 1000, 8);
-
-  requestAnimationFrame((v) => void updateBoundingBoxes(v));
 };
 
 const getClosestPairs = (
@@ -119,6 +136,11 @@ const getClosestPairs = (
 let boundingBoxes: Array<BoundingBox> = [];
 let perspectiveParams: PerspectiveParams = new PerspectiveParams();
 const processBoundingBoxes = (detectedBoundingBoxes: BoundingBox[]) => {
+  // bounding boxes are serialized when received from worker
+  detectedBoundingBoxes = detectedBoundingBoxes.map(
+    (data) => new BoundingBox(data.bottom, data.height)
+  );
+
   detectedBoundingBoxes.forEach((box) =>
     boundingBoxStorage.registerBoundingBox(box)
   );
@@ -153,6 +175,8 @@ const processBoundingBoxes = (detectedBoundingBoxes: BoundingBox[]) => {
   }
 
   people = boundingBoxes.map((box) => new Person(box));
+
+  requestDetectionFromWorker();
 };
 
 let previousTimeUI = performance.now();

@@ -1,11 +1,9 @@
 import { PersonDetector } from "./scripts/person-detection/person-detector";
-import { CocoSsdPersonDetector } from "./scripts/person-detection/cocossd-person-detector";
-import { PoseNetPersonDetector } from "./scripts/person-detection/posenet-person-detector";
 import { WorkerResponse } from "./scripts/worker-message/worker-response";
 import { WorkerRequest } from "./scripts/worker-message/worker-request";
+import { YoloPersonDetector } from "./scripts/person-detection/yolo-person-detector";
 
-const personDetector: PersonDetector = new CocoSsdPersonDetector();
-// const personDetector: PersonDetector = new PoseNetPersonDetector();
+const personDetector: PersonDetector = new YoloPersonDetector();
 
 onmessage = async (e: MessageEvent<WorkerRequest>) => {
   switch (e.data.type) {

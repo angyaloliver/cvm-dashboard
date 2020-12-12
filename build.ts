@@ -8,7 +8,7 @@ export const build = async (): Promise<void> => {
     const timerStart = Date.now();
     await service.build({
       color: true,
-      entryPoints: ["./src/index.ts", "./src/styles.css"],
+      entryPoints: ["./src/index.ts", "./src/worker.ts", "./src/styles.css"],
       outdir: "./dist",
       minify: true,
       bundle: true,

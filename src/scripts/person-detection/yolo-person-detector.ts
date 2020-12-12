@@ -1,5 +1,6 @@
 import { BoundingBox } from "../bounding-box/bounding-box";
-import yolo from "tfjs-yolo";
+import { PersonDetector } from "./person-detector";
+import yolo from "../tfjs-yolo/yolo";
 
 interface YoloBox {
   top: number;
@@ -11,15 +12,16 @@ interface YoloBox {
   score: number;
   class: string;
 }
-export class YoloPersonDetector {
+
+export class YoloPersonDetector implements PersonDetector {
   private model: any;
 
   async loadModel(): Promise<void> {
     this.model = await yolo.v3tiny("/static/models/v3tiny/model.json");
   }
 
-  async getBoundingBoxes(video: HTMLVideoElement): Promise<BoundingBox[]> {
-    const yoloBoxes: YoloBox[] = await this.model.predict(video, {
+  async getBoundingBoxes(imageData: ImageData): Promise<BoundingBox[]> {
+    const yoloBoxes: YoloBox[] = await this.model.predict(imageData, {
       scoreThreshold: 0.2,
     });
 
@@ -30,9 +32,9 @@ export class YoloPersonDetector {
         let y = yoloBox.bottom;
         let height = yoloBox.height;
 
-        x = (x - video.videoWidth / 2) / (video.videoWidth / 2);
-        y = (video.videoHeight / 2 - y) / (video.videoHeight / 2);
-        height /= video.videoHeight;
+        x = (x - imageData.width / 2) / (imageData.width / 2);
+        y = (imageData.height / 2 - y) / (imageData.height / 2);
+        height /= imageData.height;
 
         return new BoundingBox([x, y], height);
       });
