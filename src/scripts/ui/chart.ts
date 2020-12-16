@@ -13,8 +13,12 @@ export class Chart {
     void this.chart.render();
   }
 
-  public getCvmValues() {
+  public getCvmValues(): Array<number> {
     return this.values.map((v) => v[1]);
+  }
+
+  public getValues(): Array<[number, number]> {
+    return this.values;
   }
 
   public addTimeFrame(time: Date, value: number): void {

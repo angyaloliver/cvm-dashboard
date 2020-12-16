@@ -67,6 +67,10 @@ export class UI {
     return this.chart.getCvmValues();
   }
 
+  public getChartValues(){
+    return this.chart.getValues();
+  }
+
   public async giveVideoStream(stream: MediaStream): Promise<void> {
     this.outputVideo.muted = true;
     this.outputVideo.srcObject = stream;

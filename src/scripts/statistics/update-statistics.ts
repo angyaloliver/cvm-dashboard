@@ -14,7 +14,7 @@ export const updateStatistics = (ui: UI, people: Array<Person>) => {
   ui.updateOverallStatistics({
     napiAtlag: calculateDailyAverageCvm(ui.getChartCvmValues()),
     jelenlegi: current,
-    tendencia: calculateTendency(ui.getChartCvmValues()),
+    tendencia: calculateTendency(ui.getChartValues()),
   });
   ui.addTimeFrame(new Date(), current);
 };

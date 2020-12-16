@@ -2,8 +2,9 @@ import { calculateTendency } from '../../src/scripts/statistics/statistics-calcu
 
 describe('math', () => {
   it('tendency', () => {
-    const values = new Array<number>(0.6, 0.7, 0.8, 0.4);
+    const values = new Array<[number, number]>([2000, 0.8], [3000, 0.4]);
     const result = calculateTendency(values);
     expect(result).toBeCloseTo(-0.4);
   });
 });
+qq
