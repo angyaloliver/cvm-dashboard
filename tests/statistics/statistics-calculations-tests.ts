@@ -7,4 +7,3 @@ describe('math', () => {
     expect(result).toBeCloseTo(-0.4);
   });
 });
-qq
